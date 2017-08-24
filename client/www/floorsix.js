@@ -6,7 +6,7 @@
 
   var lastFrame;
   var controllers = {};
-  var animator, renderer;
+  var animator, renderer, touchstart, touchmove, touchend;
   var canvas;
   var currentRoute;
   var config = {
@@ -27,6 +27,14 @@
   floorsix.app = function(cfg) {
     _isInitialized = true;
     config = Object.assign({}, config, cfg);
+  }
+
+  floorsix.geometry = {};
+  floorsix.geometry.subtractPoints = function(a, b) {
+    return {
+      x: a.x - b.x,
+      y: a.y - b.y
+    }
   }
 
   floorsix.math = {};
@@ -99,6 +107,8 @@
     document.body.appendChild(canvas);
     fillParent();
 
+    initClickEvents();
+
     var _resizeTimer;
     window.addEventListener("resize", function() {
       clearTimeout(_resizeTimer);
@@ -127,7 +137,7 @@
     }
     var indexOfHash = window.location.hash.indexOf('#');
     var hash = window.location.hash.substring(indexOfHash + 1);
-    if (hash.indexOf('?')) {
+    if (hash.indexOf('?') != -1) {
       hash = hash.substring(0, hash.indexOf('?'));
     }
     if (!hash) {
@@ -141,6 +151,9 @@
       var result = controllers[currentRoute]();
       animator = result.animate;
       renderer = result.render;
+      touchstart = result.touchstart;
+      touchmove = result.touchmove;
+      touchend = result.touchend;
       if (renderer) {
         renderer(canvas);
       }
@@ -166,6 +179,52 @@
       canvas.style.marginTop = (extra / 2) + "px";
       canvas.style.marginLeft = "0";
     }
+  }
+
+  function initClickEvents() {
+    canvas.addEventListener("mousedown", function(e) {
+      var pt = getCoordsRelativeToCanvas(e.clientX, e.clientY, canvas);
+      if (touchstart) {
+        touchstart(pt.x, pt.y);
+      }
+    });
+    canvas.addEventListener("mousemove", function(e) {
+      var pt = getCoordsRelativeToCanvas(e.clientX, e.clientY, canvas);
+      if (touchmove) {
+        touchmove(pt.x, pt.y);
+      }
+    });
+    canvas.addEventListener("mouseup", function(e) {
+      var pt = getCoordsRelativeToCanvas(e.clientX, e.clientY, canvas);
+      if (touchend) {
+        touchend(pt.x, pt.y);
+      }
+    });
+    canvas.addEventListener("touchstart", function(e) {
+      var pt = getCoordsRelativeToCanvas(e.touches[0].clientX, e.touches[0].clientY, canvas);
+      if (touchstart) {
+        touchstart(pt.x, pt.y);
+      }
+    });
+    canvas.addEventListener("touchmove", function(e) {
+      var pt = getCoordsRelativeToCanvas(e.touches[0].clientX, e.touches[0].clientY, canvas);
+      if (touchmove) {
+        touchmove(pt.x, pt.y);
+      }
+    });
+    canvas.addEventListener("touchend", function(e) {
+      var pt = getCoordsRelativeToCanvas(e.changedTouches[0].clientX, e.changedTouches[0].clientY, canvas);
+      if (touchend) {
+        touchend(pt.x, pt.y);
+      }
+    });
+  }
+
+  function getCoordsRelativeToCanvas(x, y, canvas) {
+    var bounds = canvas.getBoundingClientRect();
+    x = x - bounds.left;
+    y = y - bounds.top;
+    return { x: x, y: y };
   }
 
   function _requestAnimationFrame(animate) {

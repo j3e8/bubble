@@ -31,7 +31,8 @@ Level.init = function(level) {
        [B,B,R,_,B,o,_,R,B,B],
     ],
     bubbles: 25,
-    animal: Animal.PANDA
+    animal: Animal.PANDA,
+    theme: Theme.BAMBOO
   }
 
   levels[2] = {
@@ -41,7 +42,8 @@ Level.init = function(level) {
       [_,G,R,_,B,o,B,_,G,_,_]
     ],
     bubbles: 10,
-    animal: Animal.RED_PANDA
+    animal: Animal.RED_PANDA,
+    theme: Theme.BAMBOO
   }
 
   return levels[level];

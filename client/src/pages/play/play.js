@@ -9,7 +9,7 @@ floorsix.controller("/play", function() {
   var MAX_TOP_PCT = 0.05;
 
   var map;
-  var theme = Theme.BAMBOO;
+  var theme;
   var blaster;
   var stats;
   var top = 0;
@@ -25,6 +25,7 @@ floorsix.controller("/play", function() {
 
   function initializeLevel() {
     level = Level.init(levelNumber);
+    theme = level.theme;
     map = level.map;
     var canvas = floorsix.getCanvas();
     BUBBLE_DIAMETER = canvas.width / BUBBLES_PER_ROW;
@@ -35,7 +36,6 @@ floorsix.controller("/play", function() {
     top = calculateTop();
     targetTop = top;
     initBubbles(canvas);
-    initClickEvents(canvas);
     initBlaster(canvas);
     if (!stats) {
       stats = Stats.initialize(canvas, levelNumber);
@@ -106,52 +106,18 @@ floorsix.controller("/play", function() {
     console.log('recalculateMapRows', map);
   }
 
-  function initClickEvents(canvas) {
-    canvas.addEventListener("mousedown", function(e) {
-      var pt = getCoordsRelativeToCanvas(e.clientX, e.clientY, canvas);
-      handleMouseDown(pt.x, pt.y);
-    });
-    canvas.addEventListener("mousemove", function(e) {
-      var pt = getCoordsRelativeToCanvas(e.clientX, e.clientY, canvas);
-      handleMouseMove(pt.x, pt.y);
-    });
-    canvas.addEventListener("mouseup", function(e) {
-      var pt = getCoordsRelativeToCanvas(e.clientX, e.clientY, canvas);
-      handleMouseUp(pt.x, pt.y);
-    });
-    canvas.addEventListener("touchstart", function(e) {
-      var pt = getCoordsRelativeToCanvas(e.touches[0].clientX, e.touches[0].clientY, canvas);
-      handleMouseDown(pt.x, pt.y);
-    });
-    canvas.addEventListener("touchmove", function(e) {
-      var pt = getCoordsRelativeToCanvas(e.touches[0].clientX, e.touches[0].clientY, canvas);
-      handleMouseMove(pt.x, pt.y);
-    });
-    canvas.addEventListener("touchend", function(e) {
-      var pt = getCoordsRelativeToCanvas(e.changedTouches[0].clientX, e.changedTouches[0].clientY, canvas);
-      handleMouseUp(pt.x, pt.y);
-    });
-  }
-
-  function getCoordsRelativeToCanvas(x, y, canvas) {
-    var bounds = canvas.getBoundingClientRect();
-    x = x - bounds.left;
-    y = y - bounds.top;
-    return { x: x, y: y };
-  }
-
   function initBlaster(canvas) {
     blaster = Blaster.createBlaster(canvas, BUBBLE_DIAMETER, BUBBLE_RADIUS);
     blaster.currentBubble = Bubble.create(blaster.x, blaster.y, BUBBLE_RADIUS, getRandomBubbleColor());
     blaster.nextBubble = Bubble.create(blaster.nextX, blaster.nextY, BUBBLE_RADIUS, getRandomBubbleColor());
   }
 
-  function handleMouseDown(x, y) {
-    console.log('handleMouseDown', x, y);
+  function handleTouchStart(x, y) {
+    console.log('handleTouchStart', x, y);
     calculateTrajectorySlope(x, y);
   }
 
-  function handleMouseMove(x, y) {
+  function handleTouchMove(x, y) {
     calculateTrajectorySlope(x, y);
   }
 
@@ -164,9 +130,9 @@ floorsix.controller("/play", function() {
     blaster.trajectory = slope;
   }
 
-  function handleMouseUp(x, y) {
+  function handleTouchEnd(x, y) {
     var canvas = floorsix.getCanvas();
-    console.log('handleMouseUp', x, y);
+    console.log('handleTouchEnd', x, y);
     if (blaster.trajectory && stats.bubblesLeft) {
       var angle = floorsix.math.atan(y - blaster.y, x - blaster.x);
       blaster.currentBubble.v = {
@@ -551,6 +517,9 @@ floorsix.controller("/play", function() {
 
   return {
     'animate': animate,
-    'render': render
+    'render': render,
+    'touchstart': handleTouchStart,
+    'touchmove': handleTouchMove,
+    'touchend': handleTouchEnd
   }
 });

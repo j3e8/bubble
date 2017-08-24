@@ -1,14 +1,25 @@
 var Theme = {};
 
+Theme.WOODLAND = {
+  background: {
+    url: 'www/assets/themes/woodland/woodland.png'
+  },
+  flurries: [
+    { url: 'www/assets/themes/flurry1.svg', count: 5 },
+    { url: 'www/assets/themes/flurry2.svg', count: 5 },
+    { url: 'www/assets/themes/flurry3.svg', count: 5 },
+    { url: 'www/assets/themes/flurry4.svg', count: 5 }
+  ]
+}
 Theme.BAMBOO = {
   background: {
     url: 'www/assets/themes/bamboo/bamboo.png'
   },
   flurries: [
-    { url: 'www/assets/themes/bamboo/flurry1.svg', count: 5 },
-    { url: 'www/assets/themes/bamboo/flurry2.svg', count: 5 },
-    { url: 'www/assets/themes/bamboo/flurry3.svg', count: 5 },
-    { url: 'www/assets/themes/bamboo/flurry4.svg', count: 5 }
+    { url: 'www/assets/themes/flurry1.svg', count: 5 },
+    { url: 'www/assets/themes/flurry2.svg', count: 5 },
+    { url: 'www/assets/themes/flurry3.svg', count: 5 },
+    { url: 'www/assets/themes/flurry4.svg', count: 5 }
   ]
 }
 

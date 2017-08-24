@@ -1,5 +1,5 @@
 floorsix.controller("/", function() {
-
+  console.log('home');
   function animate(elapsedMs) {
 
   }
