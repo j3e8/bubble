@@ -13,6 +13,30 @@ Level.init = function(level) {
 
   levels[1] = {
     map: [
+      [R,R,R,B,B,G,B,B,R,R,R],
+       [R,R,B,o,G,G,B,B,R,R],
+      [G,G,G,B,B,G,B,B,G,G,G],
+       [R,R,G,B,G,G,B,G,R,R],
+      [G,R,R,R,R,R,R,o,R,R,G],
+       [G,G,G,B,B,B,B,G,G,G],
+      [G,G,B,B,R,R,R,B,B,G,G],
+       [R,B,R,G,G,G,G,R,B,R],
+      [R,R,R,G,G,B,G,G,R,R,R],
+       [G,G,B,B,B,B,B,B,G,G],
+      [G,R,G,R,o,R,G,R,G,R,G],
+       [R,G,R,R,G,G,R,R,G,R],
+      [G,B,B,B,G,G,G,B,B,B,G],
+       [G,B,R,R,R,R,R,R,B,G],
+      [G,B,B,B,G,G,G,B,B,B,G],
+       [B,B,R,R,R,R,R,R,B,B],
+    ],
+    bubbles: 25,
+    animal: Animal.RACOON,
+    theme: Theme.WOODLAND
+  }
+
+  levels[50] = {
+    map: [
       [R,R,_,B,B,_,B,B,_,R,R],
        [G,R,_,B,G,G,B,_,R,G],
       [G,_,R,_,B,G,B,_,R,_,G],
