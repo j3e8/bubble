@@ -47,11 +47,11 @@ Bubble.create = function(x, y, r, color, animal) {
   }
   if (animal) {
     bubble.animalImg = new Image();
-    bubble.animalImg.src = Animal.Images[bubble.animal];
+    bubble.animalImg.src = Animal.Bubbles[bubble.animal];
     bubble.animalImg.onload = function() {
       bubble.animalImgLoaded = true;
       var aspect = bubble.animalImg.width / bubble.animalImg.height;
-      var maxside = (r * 2) * 0.8;
+      var maxside = r * 2;
       bubble.animalWidth = aspect >= 1 ? maxside : maxside * aspect;
       bubble.animalHeight = aspect >= 1 ? maxside / aspect : maxside;
     }
@@ -106,7 +106,7 @@ Bubble.render = function(ctx, bubble) {
       return;
     }
   }
-  if (bubble.img && bubble.loaded) {
+  else if (bubble.img && bubble.loaded) {
     ctx.drawImage(bubble.img, bubble.x - bubble.r, bubble.y - bubble.r, bubble.d, bubble.d);
   }
 }

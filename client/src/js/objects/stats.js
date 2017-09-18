@@ -37,6 +37,16 @@ Stats.ANIMAL_WIDTH_PCT = 0.09;
       stats.bottomLoaded = true;
       stats.loaded = stats.topLoaded && stats.bottomLoaded;
     }
+    try {
+      Stats.collection = localStorage.getItem('collection');
+    } catch(err) {
+      console.error("Can't load from localStorage");
+    }
+    if (!Stats.collection) {
+      Stats.collection = {
+        'animals': {}
+      };
+    }
     return stats;
   }
 

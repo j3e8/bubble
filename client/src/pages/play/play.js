@@ -8,6 +8,10 @@ floorsix.controller("/play", function() {
   var MAP_PCT_HEIGHT = 0.5;
   var MAX_TOP_PCT = 0.05;
 
+  var PHASE_PLAYING = 1;
+  var PHASE_COLLECTORS_CARD = 2;
+  var phase = PHASE_PLAYING;
+
   var map;
   var theme;
   var blaster;
@@ -17,6 +21,7 @@ floorsix.controller("/play", function() {
   var stars = [];
   var fallingBubbles = [];
   var scores = [];
+  var collectorsCard = null;
 
   var query = floorsix.search();
   var levelNumber = query.level;
@@ -114,11 +119,19 @@ floorsix.controller("/play", function() {
 
   function handleTouchStart(x, y) {
     console.log('handleTouchStart', x, y);
-    calculateTrajectorySlope(x, y);
+    if (phase == PHASE_PLAYING) {
+      calculateTrajectorySlope(x, y);
+    }
+    else if (phase == PHASE_COLLECTORS_CARD) {
+      collectorsCard = null;
+      phase = PHASE_PLAYING;
+    }
   }
 
   function handleTouchMove(x, y) {
-    calculateTrajectorySlope(x, y);
+    if (phase == PHASE_PLAYING) {
+      calculateTrajectorySlope(x, y);
+    }
   }
 
   function calculateTrajectorySlope(x, y) {
@@ -131,19 +144,21 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchEnd(x, y) {
-    var canvas = floorsix.getCanvas();
-    console.log('handleTouchEnd', x, y);
-    if (blaster.trajectory && stats.bubblesLeft) {
-      var angle = floorsix.math.atan(y - blaster.y, x - blaster.x);
-      blaster.currentBubble.v = {
-        x: Math.cos(angle) * Bubble.BUBBLE_VELOCITY,
-        y: Math.sin(angle) * Bubble.BUBBLE_VELOCITY
+    if (phase == PHASE_PLAYING) {
+      var canvas = floorsix.getCanvas();
+      console.log('handleTouchEnd', x, y);
+      if (blaster.trajectory && stats.bubblesLeft) {
+        var angle = floorsix.math.atan(y - blaster.y, x - blaster.x);
+        blaster.currentBubble.v = {
+          x: Math.cos(angle) * Bubble.BUBBLE_VELOCITY,
+          y: Math.sin(angle) * Bubble.BUBBLE_VELOCITY
+        }
+        blaster.currentBubble.status = Bubble.FIRING;
+        console.log('FIRE!', angle, blaster.currentBubble.v);
+        stats.bubblesLeft--;
       }
-      blaster.currentBubble.status = Bubble.FIRING;
-      console.log('FIRE!', angle, blaster.currentBubble.v);
-      stats.bubblesLeft--;
+      blaster.trajectory = null;
     }
-    blaster.trajectory = null;
   }
 
   function animate(elapsedMs) {
@@ -238,6 +253,10 @@ floorsix.controller("/play", function() {
         scores.splice(scores.indexOf(score), 1);
       }
     });
+
+    if (collectorsCard) {
+      Card.animate(elapsedMs, collectorsCard);
+    }
   }
 
   function settleBubble() {
@@ -257,11 +276,15 @@ floorsix.controller("/play", function() {
         var fallers = disconnectedBubbleResults.filter(function(db) {
           return map[db.row][db.col] && !map[db.row][db.col].animal;
         });
-        dropBubbles(fallers);
+        if (fallers.length) {
+          dropBubbles(fallers);
+        }
         var rescued = disconnectedBubbleResults.filter(function(db) {
           return map[db.row][db.col] && map[db.row][db.col].animal;
         });
-        rescueAnimals(rescued);
+        if (rescued.length) {
+          rescueAnimals(rescued);
+        }
       }
       recalculateMapRows();
       prepareNextBubble();
@@ -294,6 +317,10 @@ floorsix.controller("/play", function() {
   function rescueAnimals(disconnectedBubbleResults) {
     console.log('rescueAnimals', disconnectedBubbleResults);
     stats.score += disconnectedBubbleResults.length * Stats.SCORE_PER_RESCUED_ANIMAL;
+    var canvas = floorsix.getCanvas();
+    var tmp = map[disconnectedBubbleResults[0].row][disconnectedBubbleResults[0].col];
+    collectorsCard = Card.create(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, Animal.Images[tmp.animal], tmp.animal);
+    phase = PHASE_COLLECTORS_CARD;
     disconnectedBubbleResults.forEach(function(db) {
       var bub = map[db.row][db.col];
       var s = Star.createStarburst(bub.x, bub.y, bub.d);
@@ -476,6 +503,10 @@ floorsix.controller("/play", function() {
     stats.rescuedAnimals.forEach(function(bubble) {
       Bubble.render(ctx, bubble);
     });
+
+    if (collectorsCard) {
+      Card.render(ctx, collectorsCard);
+    }
   }
 
   function renderStars(ctx) {
