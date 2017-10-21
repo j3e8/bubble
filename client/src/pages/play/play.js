@@ -10,6 +10,8 @@ floorsix.controller("/play", function() {
 
   var PHASE_PLAYING = 1;
   var PHASE_COLLECTORS_CARD = 2;
+  var PHASE_LOSE = 3;
+  var PHASE_WIN = 4;
   var phase = PHASE_PLAYING;
 
   var map;
@@ -43,7 +45,7 @@ floorsix.controller("/play", function() {
     initBubbles(canvas);
     initBlaster(canvas);
     if (!stats) {
-      stats = Stats.initialize(canvas, levelNumber);
+      stats = Stats.initialize(canvas, level);
       stats.bubblesLeft = level.bubbles;
     }
   }
@@ -107,8 +109,6 @@ floorsix.controller("/play", function() {
       map.splice(map.length - (count - 1), (count - 1));
     }
     targetTop = calculateTop();
-    console.log('top', top, 'targetTop', targetTop);
-    console.log('recalculateMapRows', map);
   }
 
   function initBlaster(canvas) {
@@ -118,13 +118,21 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchStart(x, y) {
-    console.log('handleTouchStart', x, y);
     if (phase == PHASE_PLAYING) {
-      calculateTrajectorySlope(x, y);
+      var pt = { x:x, y:y };
+      if (Bubble.pointHitTest(blaster.currentBubble, pt) || Bubble.pointHitTest(blaster.nextBubble, pt)) {
+        switchBubbles();
+      }
+      else {
+        calculateTrajectorySlope(x, y);
+      }
     }
     else if (phase == PHASE_COLLECTORS_CARD) {
       collectorsCard = null;
       phase = PHASE_PLAYING;
+    }
+    else if (phase == PHASE_LOSE || phase == PHASE_WIN) {
+      floorsix.navigate('/map?level=' + level.number);
     }
   }
 
@@ -146,7 +154,6 @@ floorsix.controller("/play", function() {
   function handleTouchEnd(x, y) {
     if (phase == PHASE_PLAYING) {
       var canvas = floorsix.getCanvas();
-      console.log('handleTouchEnd', x, y);
       if (blaster.trajectory && stats.bubblesLeft) {
         var angle = floorsix.math.atan(y - blaster.y, x - blaster.x);
         blaster.currentBubble.v = {
@@ -154,7 +161,6 @@ floorsix.controller("/play", function() {
           y: Math.sin(angle) * Bubble.BUBBLE_VELOCITY
         }
         blaster.currentBubble.status = Bubble.FIRING;
-        console.log('FIRE!', angle, blaster.currentBubble.v);
         stats.bubblesLeft--;
       }
       blaster.trajectory = null;
@@ -164,6 +170,7 @@ floorsix.controller("/play", function() {
   function animate(elapsedMs) {
     var canvas = floorsix.getCanvas();
     Theme.animate(elapsedMs, theme);
+    Stats.animate(elapsedMs, stats);
 
     if (targetTop != top) {
       var dy = Bubble.BUBBLE_SHIFT_VELOCITY * elapsedMs * (targetTop > top ? 1 : -1);
@@ -288,7 +295,29 @@ floorsix.controller("/play", function() {
       }
       recalculateMapRows();
       prepareNextBubble();
+
+      if (isLevelComplete()) {
+        console.log('you win');
+        phase = PHASE_WIN;
+        Stats.youWin(stats);
+      }
+      else if (!stats.bubblesLeft && !blaster.currentBubble) {
+        console.log('you lose');
+        phase = PHASE_LOSE;
+        Stats.youLose(stats);
+      }
     });
+  }
+
+  function isLevelComplete() {
+    for (var i=map.length - 1; i >= 0; i--) {
+      for (var j=0; j<map[i].length; j++) {
+        if (map[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   function popBubbles(contiguousBubbleResults) {
@@ -304,7 +333,6 @@ floorsix.controller("/play", function() {
   }
 
   function dropBubbles(disconnectedBubbleResults) {
-    console.log('dropBubbles', disconnectedBubbleResults);
     stats.score += disconnectedBubbleResults.length * Stats.SCORE_PER_FALLING_BUBBLE;
     disconnectedBubbleResults.forEach(function(db) {
       var bub = map[db.row][db.col];
@@ -315,11 +343,10 @@ floorsix.controller("/play", function() {
   }
 
   function rescueAnimals(disconnectedBubbleResults) {
-    console.log('rescueAnimals', disconnectedBubbleResults);
     stats.score += disconnectedBubbleResults.length * Stats.SCORE_PER_RESCUED_ANIMAL;
     var canvas = floorsix.getCanvas();
     var tmp = map[disconnectedBubbleResults[0].row][disconnectedBubbleResults[0].col];
-    collectorsCard = Card.create(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, Animal.Images[tmp.animal], tmp.animal);
+    collectorsCard = Card.create(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, Animal.Images[tmp.animal], tmp.animal, Animal.Names[tmp.animal]);
     phase = PHASE_COLLECTORS_CARD;
     disconnectedBubbleResults.forEach(function(db) {
       var bub = map[db.row][db.col];
@@ -327,9 +354,7 @@ floorsix.controller("/play", function() {
       stars = stars.concat(s);
       stats.rescuedAnimals.push(bub);
       Bubble.rescue(bub);
-      Bubble.setTarget(bub, Stats.getNextAnimalCoords(stats), function() {
-
-      });
+      Bubble.setTarget(bub, Stats.getNextAnimalCoords(stats), function() {});
       map[db.row][db.col] = null;
     });
   }
@@ -408,10 +433,8 @@ floorsix.controller("/play", function() {
   }
 
   function prepareNextBubble() {
-    console.log('prepareNextBubble');
     if (blaster.nextBubble) {
       Bubble.setTarget(blaster.nextBubble, { x: blaster.x, y: blaster.y }, function() {
-        console.log('nextBubble arrived at target');
         blaster.currentBubble = blaster.nextBubble;
         if (stats.bubblesLeft > 1) {
           blaster.nextBubble = Bubble.create(blaster.nextX, blaster.nextY, BUBBLE_RADIUS, getRandomBubbleColor());
@@ -423,6 +446,17 @@ floorsix.controller("/play", function() {
     }
     else {
       blaster.currentBubble = null;
+    }
+  }
+
+  function switchBubbles() {
+    if (blaster.currentBubble && blaster.nextBubble) {
+      var tmp = blaster.currentBubble;
+      blaster.currentBubble = blaster.nextBubble;
+      blaster.nextBubble = tmp;
+
+      Bubble.setTarget(blaster.currentBubble, { x: blaster.nextBubble.x, y: blaster.nextBubble.y }, function() {});
+      Bubble.setTarget(blaster.nextBubble, { x: blaster.currentBubble.x, y: blaster.currentBubble.y }, function() {});
     }
   }
 
@@ -506,6 +540,12 @@ floorsix.controller("/play", function() {
 
     if (collectorsCard) {
       Card.render(ctx, collectorsCard);
+    }
+    if (phase == PHASE_WIN) {
+      Stats.renderWin(ctx, canvas, stats, level.animal);
+    }
+    else if (phase == PHASE_LOSE) {
+      Stats.renderLose(ctx, canvas, stats, level.animal);
     }
   }
 

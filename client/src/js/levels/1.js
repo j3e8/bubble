@@ -12,6 +12,7 @@ Level.init = function(level) {
   var levels = {};
 
   levels[1] = {
+    number: 1,
     map: [
       [R,R,R,B,B,G,B,B,R,R,R],
        [R,R,B,o,G,G,B,B,R,R],
@@ -30,12 +31,26 @@ Level.init = function(level) {
       [G,B,B,B,G,G,G,B,B,B,G],
        [B,B,R,R,R,R,R,R,B,B],
     ],
-    bubbles: 25,
-    animal: Animal.RACOON,
+    bubbles: 2,
+    animal: Animal.RACCOON,
     theme: Theme.WOODLAND
   }
 
+  levels[2] = {
+    number: 2,
+    map: [
+      [R,R,G,B,_,_,B,G,R,_,_],
+       [G,R,_,B,G,B,_,G,R,_],
+      [_,G,R,_,B,o,B,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.SKUNK,
+    theme: Theme.WOODLAND
+  }
+
+
   levels[50] = {
+    number: 50,
     map: [
       [R,R,_,B,B,_,B,B,_,R,R],
        [G,R,_,B,G,G,B,_,R,G],
@@ -56,17 +71,6 @@ Level.init = function(level) {
     ],
     bubbles: 25,
     animal: Animal.PANDA,
-    theme: Theme.BAMBOO
-  }
-
-  levels[2] = {
-    map: [
-      [R,R,G,B,_,_,B,G,R,_,_],
-       [G,R,_,B,G,B,_,G,R,_],
-      [_,G,R,_,B,o,B,_,G,_,_]
-    ],
-    bubbles: 10,
-    animal: Animal.RED_PANDA,
     theme: Theme.BAMBOO
   }
 

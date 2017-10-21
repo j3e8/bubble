@@ -1,6 +1,4 @@
 floorsix.controller("/map", function() {
-  console.log('map controller');
-
   var CLICK_TOLERANCE = 3;
   var map = Map.create(floorsix.getCanvas());
   var originalPoint = undefined;

@@ -8,12 +8,13 @@ Card.SPINNING_IN = 1;
 Card.IDLE = 2;
 
 (function() {
-  Card.create = function(x, y, maxWidth, animalImg, animalNumber) {
+  Card.create = function(x, y, maxWidth, animalImg, animalNumber, animalName) {
     var card = {
       alive: true,
       animal: {
         number: animalNumber,
-        url: animalImg
+        url: animalImg,
+        name: animalName
       },
       x: x,
       y: y,
@@ -81,16 +82,24 @@ Card.IDLE = 2;
     ctx.rotate(card.rotation);
     ctx.drawImage(card.img, -card.width/2, -card.height/2, card.width, card.height);
     if (card.animal.img) {
-      var awidth = card.width * 0.9;
+      var awidth = card.width * 0.6;
       var aheight = awidth / card.animal.aspect;
-      ctx.drawImage(card.animal.img, -awidth/2, -aheight/2, awidth, aheight);
+      ctx.drawImage(card.animal.img, -awidth/2, card.height*0.07-aheight/2, awidth, aheight);
     }
-    var fontSize = card.height * 0.02;
+
+    var fontSize = card.height * 0.06;
     ctx.font = fontSize + "px Avenir-Light";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(card.animal.name, 0, -card.height/2 + card.height*0.16);
+
+    var numberFontSize = card.height * 0.04;
+    ctx.font = numberFontSize + "px Avenir-Light";
     ctx.textBaseline = "bottom";
     ctx.textAlign = "left";
     ctx.fillStyle = "#000000";
-    ctx.fillText(makeCollectorsNumber(card.animal.number), -card.width/2 + card.width * 0.01, card.height/2 - card.height * 0.01);
+    ctx.fillText(makeCollectorsNumber(card.animal.number), -card.width/2 + card.width*0.2, card.height/2 - card.height*0.06);
     ctx.restore();
     ctx.globalAlpha = 1;
   }

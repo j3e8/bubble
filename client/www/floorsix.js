@@ -13,20 +13,25 @@
     aspect: 0.8,
     backgroundColor: '#000000'
   };
+  var NAV_IDLE = 0;
+  var NAV_FADE_IN = 1;
+  var NAV_FADE_OUT = 2;
+  var NAV_FADE_RATE = 0.0015;
+  var navigator = {
+    shadowOpacity: 0,
+    phase: NAV_IDLE,
+    route: ''
+  }
 
   var _isInitialized = false;
-
-  floorsix.controller = function(route, fn) {
-    controllers[route] = fn;
-  }
-
-  floorsix.getCanvas = function() {
-    return canvas;
-  }
 
   floorsix.app = function(cfg) {
     _isInitialized = true;
     config = Object.assign({}, config, cfg);
+  }
+
+  floorsix.controller = function(route, fn) {
+    controllers[route] = fn;
   }
 
   floorsix.geometry = {};
@@ -35,6 +40,10 @@
       x: a.x - b.x,
       y: a.y - b.y
     }
+  }
+
+  floorsix.getCanvas = function() {
+    return canvas;
   }
 
   floorsix.math = {};
@@ -50,6 +59,12 @@
       angle += Math.PI;
     }
     return angle;
+  }
+
+  floorsix.navigate = function(route) {
+    navigator.phase = NAV_FADE_OUT;
+    navigator.shadowOpacity = 0;
+    navigator.route = route;
   }
 
   floorsix.physics = {};
@@ -154,9 +169,7 @@
       touchstart = result.touchstart;
       touchmove = result.touchmove;
       touchend = result.touchend;
-      if (renderer) {
-        renderer(canvas);
-      }
+      render(canvas);
     }
     else {
       console.error("Controller not found for route", currentRoute);
@@ -242,17 +255,44 @@
     var thisFrame = new Date().getTime();
     if (!lastFrame) lastFrame = thisFrame;
     var elapsedMs = thisFrame - lastFrame;
+    if (navigator.phase == NAV_FADE_IN) {
+      navigator.shadowOpacity -= NAV_FADE_RATE * elapsedMs;
+      if (navigator.shadowOpacity <= 0) {
+        navigator.shadowOpacity = 0;
+        navigator.phase = NAV_IDLE;
+      }
+    }
+    else if (navigator.phase == NAV_FADE_OUT) {
+      navigator.shadowOpacity += NAV_FADE_RATE * elapsedMs;
+      if (navigator.shadowOpacity >= 1) {
+        navigator.shadowOpacity = 1;
+        navigator.phase = NAV_FADE_IN;
+        window.location.hash = "#" + navigator.route;
+      }
+    }
     if (elapsedMs && animator) {
       var shouldRender = animator(elapsedMs);
-      if (shouldRender !== false && renderer) {
-        var ctx = canvas.getContext("2d");
-        ctx.fillStyle = config.backgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        renderer(canvas);
+      if (shouldRender !== false) {
+        render();
       }
     }
     lastFrame = thisFrame;
     _requestAnimationFrame(animate);
+  }
+
+  function render() {
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = config.backgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (renderer) {
+      renderer(canvas);
+    }
+    if (navigator.phase == NAV_FADE_IN || navigator.phase == NAV_FADE_OUT) {
+      ctx.fillStyle = "#000000";
+      ctx.globalAlpha = navigator.shadowOpacity;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+    }
   }
 
 })();

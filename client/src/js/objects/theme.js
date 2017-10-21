@@ -5,10 +5,10 @@ Theme.WOODLAND = {
     url: 'www/assets/themes/woodland/woodland.png'
   },
   flurries: [
-    { url: 'www/assets/themes/flurry1.svg', count: 5 },
-    { url: 'www/assets/themes/flurry2.svg', count: 5 },
-    { url: 'www/assets/themes/flurry3.svg', count: 5 },
-    { url: 'www/assets/themes/flurry4.svg', count: 5 }
+    { url: 'www/assets/themes/flurry1.svg', count: 8 },
+    { url: 'www/assets/themes/flurry2.svg', count: 8 },
+    { url: 'www/assets/themes/flurry3.svg', count: 8 },
+    { url: 'www/assets/themes/flurry4.svg', count: 8 }
   ]
 }
 Theme.BAMBOO = {
@@ -100,7 +100,4 @@ function updateLoadedStatus(theme) {
     loaded = false;
   }
   theme.loaded = loaded;
-  if (theme.loaded) {
-    console.log('theme loaded');
-  }
 }
