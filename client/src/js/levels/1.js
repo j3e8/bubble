@@ -1,6 +1,12 @@
-var Level = {};
+var Level = {
+  levels: []
+};
 
-Level.init = function(level) {
+Level.get = function(level) {
+  return Level.levels[level];
+}
+
+Level.init = function() {
   var R = Bubble.RED;
   var B = Bubble.BLUE;
   var G = Bubble.GREEN;
@@ -9,9 +15,7 @@ Level.init = function(level) {
   var _ = null;
   var o = Bubble.ANIMAL
 
-  var levels = {};
-
-  levels[1] = {
+  Level.levels[1] = {
     number: 1,
     map: [
       [R,R,R,B,B,G,B,B,R,R,R],
@@ -31,12 +35,14 @@ Level.init = function(level) {
       [G,B,B,B,G,G,G,B,B,B,G],
        [B,B,R,R,R,R,R,R,B,B],
     ],
-    bubbles: 2,
+    bubbles: 30,
     animal: Animal.RACCOON,
-    theme: Theme.WOODLAND
+    theme: Theme.WOODLAND,
+    x: 0.3969,
+    y: 0.825
   }
 
-  levels[2] = {
+  Level.levels[2] = {
     number: 2,
     map: [
       [R,R,G,B,_,_,B,G,R,_,_],
@@ -48,8 +54,7 @@ Level.init = function(level) {
     theme: Theme.WOODLAND
   }
 
-
-  levels[50] = {
+  Level.levels[50] = {
     number: 50,
     map: [
       [R,R,_,B,B,_,B,B,_,R,R],
@@ -73,6 +78,4 @@ Level.init = function(level) {
     animal: Animal.PANDA,
     theme: Theme.BAMBOO
   }
-
-  return levels[level];
 }

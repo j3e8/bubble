@@ -38,9 +38,6 @@ Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
       minx = canvas.width - map.width;
       miny = canvas.height - map.height;
     }
-    map.levels = [
-      { number: 1, x: 0.3969, y: 0.825 }
-    ];
     return map;
   }
 
@@ -54,7 +51,7 @@ Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
       ctx.drawImage(map.img, map.x, map.y, map.width, map.height);
 
       if (levelIcon.loaded) {
-        map.levels.forEach(function(level) {
+        Level.levels.forEach(function(level) {
           renderLevelIcon(canvas, ctx, map, level);
         });
       }
@@ -90,6 +87,9 @@ Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
   }
 
   Map.hitTest = function(map, level, x, y) {
+    if (!level) {
+      return false;
+    }
     var pt = getCoordsForLevelIcon(map, level);
     var sqd = (pt.x - x)*(pt.x - x) + (pt.y - y)*(pt.y - y);
     if (sqd <= LEVEL_ICON_WIDTH * LEVEL_ICON_WIDTH) {

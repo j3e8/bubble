@@ -37,17 +37,12 @@ floorsix.controller("/map", function() {
   }
 
   function handleClick(x, y) {
-    console.log('click', x, y);
-    for (var i=0; i < map.levels.length; i++) {
-      if (Map.hitTest(map, map.levels[i], x, y)) {
-        transitionToLevel(map.levels[i]);
+    for (var i=0; i < Level.levels.length; i++) {
+      if (Map.hitTest(map, Level.levels[i], x, y)) {
+        floorsix.navigate('/play?level=' + i);
         break;
       }
     }
-  }
-
-  function transitionToLevel(level) {
-    console.log('transitionToLevel', level);
   }
 
   return {

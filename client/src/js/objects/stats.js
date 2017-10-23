@@ -26,8 +26,10 @@ Stats.FADE_IN_RATE = 0.0015;
       level: level,
       notificationOpacity: 0,
       phase: Stats.PHASE_PLAYING,
-      rescuedAnimals: []
+      rescuedAnimals: [],
+      saved: null
     }
+    Stats.load(stats);
     stats.topImg = new Image();
     stats.topImg.src = 'www/assets/top.svg';
     stats.topImg.onload = function() {
@@ -82,21 +84,27 @@ Stats.FADE_IN_RATE = 0.0015;
       stats.bubble.height = stats.bubble.width / aspect;
       stats.bubble.loaded = true;
     }
-    try {
-      Stats.collection = localStorage.getItem('collection');
-    } catch(err) {
-      console.error("Can't load from localStorage");
-    }
-    if (!Stats.collection) {
-      Stats.collection = {
-        'animals': {}
-      };
-    }
     return stats;
   }
 
   function calculateStatsLoaded(stats) {
     stats.loaded = stats.topLoaded && stats.bottomLoaded && stats.loseLoaded && stats.winLoaded;
+  }
+
+  Stats.fire = function(stats) {
+    stats.bubblesLeft--;
+    stats.history.bubblesFired++;
+    Stats.save(stats);
+  }
+
+  Stats.dropBubbles = function(stats, num) {
+    stats.history.bubblesDropped += num;
+    Stats.save(stats);
+  }
+
+  Stats.popBubbles = function(stats, num) {
+    stats.history.bubblesPopped += num;
+    Stats.save(stats);
   }
 
   Stats.getNextAnimalCoords = function(stats) {
@@ -116,6 +124,13 @@ Stats.FADE_IN_RATE = 0.0015;
         stats.notificationOpacity = 1;
       }
     }
+  }
+
+  Stats.rescueAnimal = function(stats, bubble) {
+    stats.rescuedAnimals.push(bubble);
+    stats.history.animalsRescued++;
+    stats.history.animals[bubble.animal] = true;
+    Stats.save(stats);
   }
 
   Stats.renderTopStats = function(ctx, canvas, stats) {
@@ -181,11 +196,61 @@ Stats.FADE_IN_RATE = 0.0015;
   Stats.youLose = function(stats) {
     stats.phase = Stats.PHASE_LOSE;
     stats.notificationOpacity = 0;
+    stats.history.totalLosses++;
+    Stats.save(stats);
   }
 
   Stats.youWin = function(stats) {
     stats.phase = Stats.PHASE_WIN;
     stats.notificationOpacity = 0;
+    stats.history.totalWins++;
+    var level = stats.history.levels[stats.level.number] || {};
+    level.won = true;
+    level.timeWon = new Date().getTime();
+    level.highScore = Math.max(stats.score, level.highScore || 0);
+    stats.history.levels[stats.level.number] = level;
+    stats.history.totalScore = recalculateTotalScore(stats);
+    Stats.save(stats);
+  }
+
+  Stats.load = function(stats) {
+    try {
+      stats.history = JSON.parse(localStorage.getItem('stats'));
+    } catch (ex) {
+      console.warn("Unable to load stats from localStorage");
+    }
+    if (!stats.history) {
+      stats.history = {
+        animals: {},
+        animalsRescued: 0,
+        levels: {},
+        bubblesDropped: 0,
+        bubblesFired: 0,
+        bubblesPopped: 0,
+        totalLosses: 0,
+        totalTime: 0,
+        totalScore: 0,
+        totalWins: 0
+      };
+    }
+    return stats;
+  }
+
+  Stats.save = function(stats) {
+    try {
+      localStorage.setItem('stats', JSON.stringify(stats.history));
+    } catch (ex) {
+      console.error("Can't store game state");
+    }
+  }
+
+  function recalculateTotalScore(stats) {
+    var total = 0;
+    for (var prop in stats.history.levels) {
+      var level = stats.history.levels[prop];
+      total += level.highScore || 0;
+    }
+    return total;
   }
 
   function stringify(score) {

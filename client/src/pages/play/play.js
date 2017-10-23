@@ -31,7 +31,7 @@ floorsix.controller("/play", function() {
   initializeLevel();
 
   function initializeLevel() {
-    level = Level.init(levelNumber);
+    level = Level.get(levelNumber);
     theme = level.theme;
     map = level.map;
     var canvas = floorsix.getCanvas();
@@ -155,13 +155,14 @@ floorsix.controller("/play", function() {
     if (phase == PHASE_PLAYING) {
       var canvas = floorsix.getCanvas();
       if (blaster.trajectory && stats.bubblesLeft) {
+        // FIRE, SHOOT, LAUNCH
         var angle = floorsix.math.atan(y - blaster.y, x - blaster.x);
         blaster.currentBubble.v = {
           x: Math.cos(angle) * Bubble.BUBBLE_VELOCITY,
           y: Math.sin(angle) * Bubble.BUBBLE_VELOCITY
         }
         blaster.currentBubble.status = Bubble.FIRING;
-        stats.bubblesLeft--;
+        Stats.fire(stats);
       }
       blaster.trajectory = null;
     }
@@ -330,16 +331,18 @@ floorsix.controller("/play", function() {
       map[con.row][con.col] = null;
     });
     stats.score += contiguousBubbleResults.length * Stats.SCORE_PER_BUBBLE_POPPED;
+    Stats.popBubbles(stats, contiguousBubbleResults.length);
   }
 
   function dropBubbles(disconnectedBubbleResults) {
-    stats.score += disconnectedBubbleResults.length * Stats.SCORE_PER_FALLING_BUBBLE;
     disconnectedBubbleResults.forEach(function(db) {
       var bub = map[db.row][db.col];
       fallingBubbles.push(bub);
       Bubble.fall(bub);
       map[db.row][db.col] = null;
     });
+    stats.score += disconnectedBubbleResults.length * Stats.SCORE_PER_FALLING_BUBBLE;
+    Stats.dropBubbles(stats, disconnectedBubbleResults.length);
   }
 
   function rescueAnimals(disconnectedBubbleResults) {
@@ -352,7 +355,7 @@ floorsix.controller("/play", function() {
       var bub = map[db.row][db.col];
       var s = Star.createStarburst(bub.x, bub.y, bub.d);
       stars = stars.concat(s);
-      stats.rescuedAnimals.push(bub);
+      Stats.rescueAnimal(stats, bub)
       Bubble.rescue(bub);
       Bubble.setTarget(bub, Stats.getNextAnimalCoords(stats), function() {});
       map[db.row][db.col] = null;
