@@ -1,6 +1,7 @@
 var Map = {};
 
 Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
+Map.FRICTION = 0.01;
 
 (function() {
   var minx;
@@ -24,10 +25,11 @@ Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
 
   Map.create = function(canvas) {
     var map = {
-      center: { x: 0.399, y: 1 }
+      center: { x: 0.399, y: 1 },
+      v: { x: 0, y: 0 }
     };
     map.img = new Image();
-    map.img.src = "www/assets/map.svg";
+    map.img.src = "www/assets/map.png";
     map.img.onload = function() {
       map.loaded = true;
       var aspect = map.img.width / map.img.height;
@@ -42,7 +44,15 @@ Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
   }
 
   Map.animate = function(elapsedMs, map) {
-
+    Map.move(map, map.v.x * elapsedMs, map.v.y * elapsedMs);
+    map.v.x -= map.v.x * Map.FRICTION * elapsedMs;
+    if (Math.abs(map.v.x) < 0.01) {
+      map.v.x = 0;
+    }
+    map.v.y -= map.v.y * Map.FRICTION * elapsedMs;
+    if (Math.abs(map.v.y) < 0.01) {
+      map.v.y = 0;
+    }
   }
 
   Map.render = function(canvas, map) {
@@ -84,6 +94,11 @@ Map.HEIGHT_TO_CANVAS_RATIO = 2.0;
     if (map.y > maxy) {
       map.y = maxy;
     }
+  }
+
+  Map.setVelocity = function(map, vx, vy) {
+    map.v.x = vx;
+    map.v.y = vy;
   }
 
   Map.hitTest = function(map, level, x, y) {

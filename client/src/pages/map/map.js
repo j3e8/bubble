@@ -2,7 +2,10 @@ floorsix.controller("/map", function() {
   var CLICK_TOLERANCE = 3;
   var map = Map.create(floorsix.getCanvas());
   var originalPoint = undefined;
+  var prevPoint = undefined;
+  var prevTouchTime = undefined;
   var lastPoint = undefined;
+  var lastTouchTime = undefined;
 
   function animate(elapsedMs) {
     Map.animate(elapsedMs, map);
@@ -14,7 +17,10 @@ floorsix.controller("/map", function() {
 
   function handleTouchStart(x, y) {
     originalPoint = { x: x, y: y };
+    prevPoint = lastPoint;
     lastPoint = { x: x, y: y };
+    prevTouchTime = lastTouchTime;
+    lastTouchTime = new Date().getTime();
   }
 
   function handleTouchMove(x, y) {
@@ -22,7 +28,10 @@ floorsix.controller("/map", function() {
       return;
     }
     Map.move(map, x - lastPoint.x, y - lastPoint.y);
+    prevPoint = lastPoint;
     lastPoint = { x: x, y: y };
+    prevTouchTime = lastTouchTime;
+    lastTouchTime = new Date().getTime();
   }
 
   function handleTouchEnd(x, y) {
@@ -30,6 +39,13 @@ floorsix.controller("/map", function() {
       var diff = floorsix.geometry.subtractPoints(originalPoint, lastPoint);
       if (diff.x <= CLICK_TOLERANCE && diff.y <= CLICK_TOLERANCE) {
         handleClick(x, y);
+      }
+      if (prevTouchTime && prevPoint) {
+        var now = new Date().getTime();
+        var elapsedMs = now - prevTouchTime;
+        var vx = (x - prevPoint.x) / elapsedMs;
+        var vy = (y - prevPoint.y) / elapsedMs;
+        Map.setVelocity(map, vx, vy);
       }
     }
     originalPoint = undefined;
