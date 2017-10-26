@@ -72,36 +72,36 @@ Card.IDLE = 2;
     }
   }
 
-  Card.render = function(ctx, card) {
+  Card.render = function(canvas, card) {
     if (!card.img) {
       return;
     }
-    ctx.globalAlpha = card.opacity;
-    ctx.save();
-    ctx.translate(card.x, card.y);
-    ctx.rotate(card.rotation);
-    ctx.drawImage(card.img, -card.width/2, -card.height/2, card.width, card.height);
+    canvas.context.globalAlpha = card.opacity;
+    canvas.context.save();
+    canvas.context.translate(card.x, card.y);
+    canvas.context.rotate(card.rotation);
+    canvas.context.drawImage(card.img, -card.width/2, -card.height/2, card.width, card.height);
     if (card.animal.img) {
       var awidth = card.width * 0.6;
       var aheight = awidth / card.animal.aspect;
-      ctx.drawImage(card.animal.img, -awidth/2, card.height*0.07-aheight/2, awidth, aheight);
+      canvas.context.drawImage(card.animal.img, -awidth/2, card.height*0.07-aheight/2, awidth, aheight);
     }
 
     var fontSize = card.height * 0.06;
-    ctx.font = fontSize + "px Avenir-Light";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText(card.animal.name, 0, -card.height/2 + card.height*0.16);
+    canvas.context.font = fontSize + "px Avenir-Light";
+    canvas.context.textBaseline = "middle";
+    canvas.context.textAlign = "center";
+    canvas.context.fillStyle = "#ffffff";
+    canvas.context.fillText(card.animal.name, 0, -card.height/2 + card.height*0.16);
 
     var numberFontSize = card.height * 0.04;
-    ctx.font = numberFontSize + "px Avenir-Light";
-    ctx.textBaseline = "bottom";
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#000000";
-    ctx.fillText(makeCollectorsNumber(card.animal.number), -card.width/2 + card.width*0.2, card.height/2 - card.height*0.06);
-    ctx.restore();
-    ctx.globalAlpha = 1;
+    canvas.context.font = numberFontSize + "px Avenir-Light";
+    canvas.context.textBaseline = "bottom";
+    canvas.context.textAlign = "left";
+    canvas.context.fillStyle = "#000000";
+    canvas.context.fillText(makeCollectorsNumber(card.animal.number), -card.width/2 + card.width*0.2, card.height/2 - card.height*0.06);
+    canvas.context.restore();
+    canvas.context.globalAlpha = 1;
   }
 
   function makeCollectorsNumber(num) {

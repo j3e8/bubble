@@ -4,17 +4,17 @@ Blaster.TRAJECTORY_VELOCITY = 0.01;
 Blaster.BUBBLE_DIAMETER = 0;
 Blaster.BUBBLE_RADIUS = 0;
 
-Blaster.createBlaster = function(canvas, d, r) {
+Blaster.createBlaster = function(canvasSize, d, r) {
   Blaster.BUBBLE_DIAMETER = d;
   Blaster.BUBBLE_RADIUS = r;
 
-  var blasterWidth = canvas.width * 0.2;
+  var blasterWidth = canvasSize.width * 0.2;
   var blasterHeight = blasterWidth;
   var blaster = {
     width: blasterWidth,
     height: blasterHeight,
-    x: canvas.width / 2,
-    y: canvas.height * 0.95,
+    x: canvasSize.width / 2,
+    y: canvasSize.height * 0.95,
   }
   blaster.nextX = blaster.x + Blaster.BUBBLE_DIAMETER;
   blaster.nextY = blaster.y + Blaster.BUBBLE_RADIUS;
@@ -31,23 +31,23 @@ Blaster.animateBlaster = function(elapsedMs, blaster) {
   }
 }
 
-Blaster.renderBlaster = function(ctx, blaster, bounds) {
+Blaster.renderBlaster = function(canvas, blaster, bounds) {
   if (!blaster) {
     return;
   }
 
   if (blaster.nextBubble) {
-    Bubble.render(ctx, blaster.nextBubble);
+    Bubble.render(canvas, blaster.nextBubble);
   }
   if (blaster.currentBubble) {
-    Bubble.render(ctx, blaster.currentBubble);
+    Bubble.render(canvas, blaster.currentBubble);
   }
   if (blaster.currentBubble && blaster.currentBubble.status != Bubble.FIRING) {
-    renderTrajectory(ctx, blaster, bounds);
+    renderTrajectory(canvas, blaster, bounds);
   }
 }
 
-function renderTrajectory(ctx, blaster, bounds) {
+function renderTrajectory(canvas, blaster, bounds) {
   if (!blaster.trajectory) {
     return;
   }
@@ -59,7 +59,7 @@ function renderTrajectory(ctx, blaster, bounds) {
   var x = points[0].x + Math.cos(angle) * blaster.trajectoryOffset;
   var y = points[0].y + Math.sin(angle) * blaster.trajectoryOffset;
 
-  ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+  canvas.context.fillStyle = "rgba(255, 255, 255, 0.3)";
 
   var p = 0;
   var dx = Math.cos(angle) * step;
@@ -81,10 +81,10 @@ function renderTrajectory(ctx, blaster, bounds) {
         opacity = sqdist / sqstep;
       }
     }
-    ctx.globalAlpha = opacity;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI*2);
-    ctx.fill();
+    canvas.context.globalAlpha = opacity;
+    canvas.context.beginPath();
+    canvas.context.arc(x, y, radius, 0, Math.PI*2);
+    canvas.context.fill();
 
     if (y + dy <= points[p+1].y && p < points.length - 2) {
       var leftover = step - Math.sqrt((points[p+1].y - y)*(points[p+1].y - y) + (points[p+1].x - x)*(points[p+1].x - x));
@@ -100,7 +100,7 @@ function renderTrajectory(ctx, blaster, bounds) {
       y += dy;
     }
   }
-  ctx.globalAlpha = 1;
+  canvas.context.globalAlpha = 1;
 }
 
 function calculateTrajectoryPath(blaster, bounds) {

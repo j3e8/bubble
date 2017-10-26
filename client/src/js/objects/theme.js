@@ -42,33 +42,33 @@ Theme.initialize = function(theme) {
 }
 
 Theme.animate = function(elapsedMs, theme) {
-  var canvas = floorsix.getCanvas();
+  var canvasSize = floorsix.getCanvasSize();
   if (theme.flurries) {
     theme.flurries.forEach(function(flurry) {
-      Flurry.animateFlurry(elapsedMs, flurry, canvas);
+      Flurry.animateFlurry(elapsedMs, flurry, canvasSize);
     });
   }
 }
 
-Theme.render = function(ctx, canvas, theme) {
+Theme.render = function(canvas, theme) {
   if (!theme.loaded) {
     return;
   }
-  renderBackground(ctx, canvas, theme);
+  renderBackground(canvas, theme);
   theme.flurries.forEach(function(flurry) {
-    Flurry.renderFlurry(ctx, canvas, flurry);
+    Flurry.renderFlurry(canvas, flurry);
   });
-  ctx.globalAlpha = 1;
+  canvas.context.globalAlpha = 1;
 }
 
-function renderBackground(ctx, canvas, theme) {
+function renderBackground(canvas, theme) {
   var scale = canvas.width / theme.background.img.width;
-  ctx.drawImage(theme.background.img, 0, 0, theme.background.width * scale, theme.background.height * scale);
+  canvas.context.drawImage(theme.background.img, 0, 0, theme.background.width * scale, theme.background.height * scale);
 }
 
 
 function loadThemeImages(theme) {
-  var canvas = floorsix.getCanvas();
+  var canvasSize = floorsix.getCanvasSize();
   theme.loading = true;
 
   if (theme.background) {
@@ -84,7 +84,7 @@ function loadThemeImages(theme) {
 
   if (theme.flurries) {
     theme.flurries.forEach(function(flurry, i) {
-      Flurry.loadFlurry(canvas, flurry, function() {
+      Flurry.loadFlurry(canvasSize, flurry, function() {
         updateLoadedStatus(theme);
       });
     });

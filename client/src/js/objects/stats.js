@@ -133,64 +133,64 @@ Stats.FADE_IN_RATE = 0.0015;
     Stats.save(stats);
   }
 
-  Stats.renderTopStats = function(ctx, canvas, stats) {
+  Stats.renderTopStats = function(canvas, stats) {
     if (!stats || !stats.loaded) {
       return;
     }
     var fontSize = Math.round(canvas.height * Stats.TOP_FONT_SIZE_PCT);
-    ctx.drawImage(stats.topImg, 0, 0, stats.topWidth, stats.topHeight);
-    ctx.font = fontSize + "px Avenir-Light";
-    ctx.fillStyle = "#0ba067";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "left";
-    ctx.fillText("LEVEL", Stats.X_PAD_PCT * canvas.width, Stats.TOP_Y_PCT * canvas.height);
-    var widthOfLevelLabel = ctx.measureText("LEVEL").width;
-    ctx.font = fontSize + "px Avenir-Heavy";
-    ctx.fillText(stats.level.number.toString(), Stats.X_PAD_PCT * canvas.width + widthOfLevelLabel + Stats.X_LABEL_PAD_PCT * canvas.width, Stats.TOP_Y_PCT * canvas.height);
+    canvas.context.drawImage(stats.topImg, 0, 0, stats.topWidth, stats.topHeight);
+    canvas.context.font = fontSize + "px Avenir-Light";
+    canvas.context.fillStyle = "#0ba067";
+    canvas.context.textBaseline = "middle";
+    canvas.context.textAlign = "left";
+    canvas.context.fillText("LEVEL", Stats.X_PAD_PCT * canvas.width, Stats.TOP_Y_PCT * canvas.height);
+    var widthOfLevelLabel = canvas.context.measureText("LEVEL").width;
+    canvas.context.font = fontSize + "px Avenir-Heavy";
+    canvas.context.fillText(stats.level.number.toString(), Stats.X_PAD_PCT * canvas.width + widthOfLevelLabel + Stats.X_LABEL_PAD_PCT * canvas.width, Stats.TOP_Y_PCT * canvas.height);
 
-    ctx.font = fontSize + "px Avenir-Light";
-    ctx.textAlign = "right";
+    canvas.context.font = fontSize + "px Avenir-Light";
+    canvas.context.textAlign = "right";
     var scorestr = stringify(stats.score);
-    ctx.fillText(scorestr, canvas.width - Stats.X_PAD_PCT * canvas.width, Stats.TOP_Y_PCT * canvas.height);
+    canvas.context.fillText(scorestr, canvas.width - Stats.X_PAD_PCT * canvas.width, Stats.TOP_Y_PCT * canvas.height);
   }
 
-  Stats.renderBottomStats = function(ctx, canvas, stats) {
+  Stats.renderBottomStats = function(canvas, stats) {
     if (!stats || !stats.loaded) {
       return;
     }
     var fontSize = Math.round(canvas.height * Stats.BOTTOM_FONT_SIZE_PCT);
-    ctx.drawImage(stats.bottomImg, 0, canvas.height - stats.bottomHeight, stats.bottomWidth, stats.bottomHeight);
-    ctx.font = fontSize + "px Avenir-Medium";
-    ctx.fillStyle = "#0ba067";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillText(stats.bubblesLeft.toString(), canvas.width / 2, canvas.height);
+    canvas.context.drawImage(stats.bottomImg, 0, canvas.height - stats.bottomHeight, stats.bottomWidth, stats.bottomHeight);
+    canvas.context.font = fontSize + "px Avenir-Medium";
+    canvas.context.fillStyle = "#0ba067";
+    canvas.context.textAlign = "center";
+    canvas.context.textBaseline = "bottom";
+    canvas.context.fillText(stats.bubblesLeft.toString(), canvas.width / 2, canvas.height);
   }
 
-  Stats.renderLose = function(ctx, canvas, stats, animal) {
-    ctx.globalAlpha = stats.notificationOpacity;
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  Stats.renderLose = function(canvas, stats, animal) {
+    canvas.context.globalAlpha = stats.notificationOpacity;
+    canvas.context.fillStyle = "rgba(0, 0, 0, 0.7)";
+    canvas.context.fillRect(0, 0, canvas.width, canvas.height);
     var x = (canvas.width - stats.loseWidth) / 2;
     var y = (canvas.height - stats.loseHeight) / 2;
-    ctx.drawImage(stats.loseImg, x, y, stats.loseWidth, stats.loseHeight);
+    canvas.context.drawImage(stats.loseImg, x, y, stats.loseWidth, stats.loseHeight);
     var ax = (canvas.width - stats.bubble.width) / 2;
     var ay = (canvas.height - stats.bubble.height) / 2;
-    ctx.drawImage(stats.bubble.img, ax, ay, stats.bubble.width, stats.bubble.height);
-    ctx.globalAlpha = 1;
+    canvas.context.drawImage(stats.bubble.img, ax, ay, stats.bubble.width, stats.bubble.height);
+    canvas.context.globalAlpha = 1;
   }
 
-  Stats.renderWin = function(ctx, canvas, stats) {
-    ctx.globalAlpha = stats.notificationOpacity;
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  Stats.renderWin = function(canvas, stats) {
+    canvas.context.globalAlpha = stats.notificationOpacity;
+    canvas.context.fillStyle = "rgba(0, 0, 0, 0.7)";
+    canvas.context.fillRect(0, 0, canvas.width, canvas.height);
     var x = (canvas.width - stats.winWidth) / 2;
     var y = (canvas.height - stats.winHeight) / 2;
-    ctx.drawImage(stats.winImg, x, y, stats.winWidth, stats.winHeight);
+    canvas.context.drawImage(stats.winImg, x, y, stats.winWidth, stats.winHeight);
     var ax = (canvas.width - stats.animal.width) / 2;
     var ay = (canvas.height - stats.animal.height) / 2;
-    ctx.drawImage(stats.animal.img, ax, ay, stats.animal.width, stats.animal.height);
-    ctx.globalAlpha = 1;
+    canvas.context.drawImage(stats.animal.img, ax, ay, stats.animal.width, stats.animal.height);
+    canvas.context.globalAlpha = 1;
   }
 
   Stats.youLose = function(stats) {

@@ -27,15 +27,15 @@ Score.animate = function(elapsedMs, score) {
   score.size += Score.SIZE_VELOCITY * elapsedMs;
 }
 
-Score.render = function(ctx, score) {
+Score.render = function(canvas, score) {
   if (!score.alive) {
     return;
   }
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = "#ffffff";
-  ctx.font = score.size + "px Avenir-Black";
-  ctx.globalAlpha = score.opacity;
-  ctx.fillText(score.value.toString(), score.x, score.y);
-  ctx.globalAlpha = 1;
+  canvas.context.textAlign = "center";
+  canvas.context.textBaseline = "middle";
+  canvas.context.fillStyle = "#ffffff";
+  canvas.context.font = score.size + "px Avenir-Black";
+  canvas.context.globalAlpha = score.opacity;
+  canvas.context.fillText(score.value.toString(), score.x, score.y);
+  canvas.context.globalAlpha = 1;
 }

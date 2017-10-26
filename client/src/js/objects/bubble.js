@@ -61,7 +61,7 @@ Bubble.create = function(x, y, r, color, animal) {
   return bubble;
 }
 
-Bubble.animate = function(elapsedMs, bubble, canvas) {
+Bubble.animate = function(elapsedMs, bubble, canvasSize) {
   if (bubble.status == Bubble.DEAD) {
     return;
   }
@@ -93,15 +93,15 @@ Bubble.animate = function(elapsedMs, bubble, canvas) {
   if (bubble.v) {
     bubble.x += bubble.v.x * elapsedMs;
     bubble.y += bubble.v.y * elapsedMs;
-    if (bubble.x > canvas.width - bubble.r) {
-      bubble.x = canvas.width - bubble.r;
+    if (bubble.x > canvasSize.width - bubble.r) {
+      bubble.x = canvasSize.width - bubble.r;
       bubble.v.x = -bubble.v.x;
     }
     if (bubble.x < bubble.r) {
       bubble.x = bubble.r;
       bubble.v.x = -bubble.v.x;
     }
-    if (bubble.y > canvas.height + bubble.height / 2) {
+    if (bubble.y > canvasSize.height + bubble.height / 2) {
       bubble.status = Bubble.DEAD;
     }
   }
@@ -111,21 +111,21 @@ Bubble.animate = function(elapsedMs, bubble, canvas) {
   }
 }
 
-Bubble.render = function(ctx, bubble) {
+Bubble.render = function(canvas, bubble) {
   if (bubble.animal && bubble.animalImg && bubble.animalImgLoaded) {
     var pi = bubble.bounce > Math.PI * 2 ? 0 : bubble.bounce;
     var stretch = Math.abs(Math.sin(pi)) * 0.15 + 1;
-    ctx.save();
-    ctx.translate(bubble.x, bubble.y);
-    ctx.scale(stretch, stretch);
-    ctx.drawImage(bubble.animalImg, -bubble.animalWidth / 2, -bubble.animalHeight / 2, bubble.animalWidth, bubble.animalHeight);
-    ctx.restore();
+    canvas.context.save();
+    canvas.context.translate(bubble.x, bubble.y);
+    canvas.context.scale(stretch, stretch);
+    canvas.context.drawImage(bubble.animalImg, -bubble.animalWidth / 2, -bubble.animalHeight / 2, bubble.animalWidth, bubble.animalHeight);
+    canvas.context.restore();
     if (bubble.status == Bubble.RESCUED) {
       return;
     }
   }
   else if (bubble.img && bubble.loaded) {
-    ctx.drawImage(bubble.img, bubble.x - bubble.r, bubble.y - bubble.r, bubble.d, bubble.d);
+    canvas.context.drawImage(bubble.img, bubble.x - bubble.r, bubble.y - bubble.r, bubble.d, bubble.d);
   }
 }
 

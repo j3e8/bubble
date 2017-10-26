@@ -9,21 +9,15 @@ Map.FRICTION = 0.01;
   var miny;
   var maxy = 0;
 
-  var LEVEL_ICON_WIDTH = 30; // px
+  var LEVEL_ICON_WIDTH_PCT = 0.05;
 
   var levelIcon = {
     loaded: false,
     img: new Image()
   }
-  levelIcon.img.src = "www/assets/levelIcon.svg";
-  levelIcon.img.onload = function() {
-    levelIcon.loaded = true;
-    var aspect = levelIcon.img.width / levelIcon.img.height;
-    levelIcon.width = LEVEL_ICON_WIDTH;
-    levelIcon.height = levelIcon.width / aspect;
-  }
 
-  Map.create = function(canvas) {
+  Map.create = function() {
+    var canvasSize = floorsix.getCanvasSize();
     var map = {
       center: { x: 0.399, y: 1 },
       v: { x: 0, y: 0 }
@@ -33,12 +27,19 @@ Map.FRICTION = 0.01;
     map.img.onload = function() {
       map.loaded = true;
       var aspect = map.img.width / map.img.height;
-      map.height = Map.HEIGHT_TO_CANVAS_RATIO * canvas.height;
+      map.height = Map.HEIGHT_TO_CANVAS_RATIO * canvasSize.height;
       map.width = map.height * aspect;
-      map.x = (canvas.width / 2) - (map.width * map.center.x);
-      map.y = (canvas.height) - (map.height * map.center.y);
-      minx = canvas.width - map.width;
-      miny = canvas.height - map.height;
+      map.x = (canvasSize.width / 2) - (map.width * map.center.x);
+      map.y = (canvasSize.height) - (map.height * map.center.y);
+      minx = canvasSize.width - map.width;
+      miny = canvasSize.height - map.height;
+    }
+    levelIcon.img.src = "www/assets/levelIcon.svg";
+    levelIcon.img.onload = function() {
+      levelIcon.loaded = true;
+      var aspect = levelIcon.img.width / levelIcon.img.height;
+      levelIcon.width = LEVEL_ICON_WIDTH_PCT * canvasSize.width;
+      levelIcon.height = levelIcon.width / aspect;
     }
     return map;
   }
@@ -56,21 +57,20 @@ Map.FRICTION = 0.01;
   }
 
   Map.render = function(canvas, map) {
-    var ctx = canvas.getContext("2d");
     if (map && map.img && map.loaded) {
-      ctx.drawImage(map.img, map.x, map.y, map.width, map.height);
+      canvas.context.drawImage(map.img, map.x, map.y, map.width, map.height);
 
       if (levelIcon.loaded) {
         Level.levels.forEach(function(level) {
-          renderLevelIcon(canvas, ctx, map, level);
+          renderLevelIcon(canvas, map, level);
         });
       }
     }
   }
 
-  function renderLevelIcon(canvas, ctx, map, level) {
+  function renderLevelIcon(canvas, map, level) {
     var pt = getCoordsForLevelIcon(map, level);
-    ctx.drawImage(levelIcon.img, pt.x - levelIcon.width / 2, pt.y - levelIcon.height / 2, levelIcon.width, levelIcon.height);
+    canvas.context.drawImage(levelIcon.img, pt.x - levelIcon.width / 2, pt.y - levelIcon.height / 2, levelIcon.width, levelIcon.height);
   }
 
   function getCoordsForLevelIcon(map, level) {
@@ -107,7 +107,7 @@ Map.FRICTION = 0.01;
     }
     var pt = getCoordsForLevelIcon(map, level);
     var sqd = (pt.x - x)*(pt.x - x) + (pt.y - y)*(pt.y - y);
-    if (sqd <= LEVEL_ICON_WIDTH * LEVEL_ICON_WIDTH) {
+    if (sqd <= levelIcon.width * levelIcon.width) {
       return true;
     }
     return false;

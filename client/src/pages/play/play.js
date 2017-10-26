@@ -34,26 +34,25 @@ floorsix.controller("/play", function() {
     level = Level.get(levelNumber);
     theme = level.theme;
     map = level.map;
-    var canvas = floorsix.getCanvas();
-    BUBBLE_DIAMETER = canvas.width / BUBBLES_PER_ROW;
+    var canvasSize = floorsix.getCanvasSize();
+    BUBBLE_DIAMETER = canvasSize.width / BUBBLES_PER_ROW;
     BUBBLE_RADIUS = BUBBLE_DIAMETER / 2;
     BUBBLE_ROW_HEIGHT = BUBBLE_ROW_HEIGHT_PCT * BUBBLE_DIAMETER;
-    MIN_TRAJECTORY_Y = canvas.height * 0.3;
+    MIN_TRAJECTORY_Y = canvasSize.height * 0.3;
     Theme.initialize(theme);
-    top = calculateTop();
+    top = calculateTop(canvasSize);
     targetTop = top;
-    initBubbles(canvas);
-    initBlaster(canvas);
+    initBubbles();
+    initBlaster(canvasSize);
     if (!stats) {
-      stats = Stats.initialize(canvas, level);
+      stats = Stats.initialize(canvasSize, level);
       stats.bubblesLeft = level.bubbles;
     }
   }
 
-  function calculateTop() {
-    var canvas = floorsix.getCanvas();
-    var maxTop = MAX_TOP_PCT * canvas.height;
-    var mapBottom = MAP_PCT_HEIGHT * canvas.height;
+  function calculateTop(canvasSize) {
+    var maxTop = MAX_TOP_PCT * canvasSize.height;
+    var mapBottom = MAP_PCT_HEIGHT * canvasSize.height;
     var totalMapHeight = map.length * BUBBLE_ROW_HEIGHT;
     var newtop = mapBottom - totalMapHeight;
     if (newtop > maxTop) {
@@ -62,7 +61,7 @@ floorsix.controller("/play", function() {
     return newtop;
   }
 
-  function initBubbles(canvas) {
+  function initBubbles() {
     map.forEach(function(row, rowIndex) {
       if (rowIndex % 2 == 0 && row.length != BUBBLES_PER_ROW
         || rowIndex % 2 == 1 && row.length != BUBBLES_PER_ROW - 1) {
@@ -108,11 +107,12 @@ floorsix.controller("/play", function() {
     else if (count > 1) {
       map.splice(map.length - (count - 1), (count - 1));
     }
-    targetTop = calculateTop();
+    var canvasSize = floorsix.getCanvasSize();
+    targetTop = calculateTop(canvasSize);
   }
 
-  function initBlaster(canvas) {
-    blaster = Blaster.createBlaster(canvas, BUBBLE_DIAMETER, BUBBLE_RADIUS);
+  function initBlaster(canvasSize) {
+    blaster = Blaster.createBlaster(canvasSize, BUBBLE_DIAMETER, BUBBLE_RADIUS);
     blaster.currentBubble = Bubble.create(blaster.x, blaster.y, BUBBLE_RADIUS, getRandomBubbleColor());
     blaster.nextBubble = Bubble.create(blaster.nextX, blaster.nextY, BUBBLE_RADIUS, getRandomBubbleColor());
   }
@@ -153,7 +153,6 @@ floorsix.controller("/play", function() {
 
   function handleTouchEnd(x, y) {
     if (phase == PHASE_PLAYING) {
-      var canvas = floorsix.getCanvas();
       if (blaster.trajectory && stats.bubblesLeft) {
         // FIRE, SHOOT, LAUNCH
         var angle = floorsix.math.atan(y - blaster.y, x - blaster.x);
@@ -169,7 +168,7 @@ floorsix.controller("/play", function() {
   }
 
   function animate(elapsedMs) {
-    var canvas = floorsix.getCanvas();
+    var canvasSize = floorsix.getCanvasSize();
     Theme.animate(elapsedMs, theme);
     Stats.animate(elapsedMs, stats);
 
@@ -191,27 +190,27 @@ floorsix.controller("/play", function() {
     map.forEach(function(row, rowIndex) {
       row.forEach(function(bubble) {
         if (bubble) {
-          Bubble.animate(elapsedMs, bubble, canvas);
+          Bubble.animate(elapsedMs, bubble, canvasSize);
         }
       });
     });
 
     fallingBubbles.forEach(function(bubble) {
-      Bubble.animate(elapsedMs, bubble, canvas);
+      Bubble.animate(elapsedMs, bubble, canvasSize);
       if (bubble.status == Bubble.DEAD) {
         fallingBubbles.splice(fallingBubbles.indexOf(bubble), 1);
       }
     });
 
     stats.rescuedAnimals.forEach(function(bubble) {
-      Bubble.animate(elapsedMs, bubble, canvas);
+      Bubble.animate(elapsedMs, bubble, canvasSize);
       if (bubble.status == Bubble.DEAD) {
         stats.rescuedAnimals.splice(stats.rescuedAnimals.indexOf(bubble), 1);
       }
     });
 
     if (blaster.currentBubble) {
-      Bubble.animate(elapsedMs, blaster.currentBubble, canvas);
+      Bubble.animate(elapsedMs, blaster.currentBubble, canvasSize);
     }
 
     if (blaster.currentBubble && blaster.currentBubble.status == Bubble.FIRING && !blaster.currentBubble.target) {
@@ -243,7 +242,7 @@ floorsix.controller("/play", function() {
     }
 
     if (blaster.nextBubble) {
-      Bubble.animate(elapsedMs, blaster.nextBubble, canvas);
+      Bubble.animate(elapsedMs, blaster.nextBubble, canvasSize);
     }
 
     Blaster.animateBlaster(elapsedMs, blaster);
@@ -347,9 +346,9 @@ floorsix.controller("/play", function() {
 
   function rescueAnimals(disconnectedBubbleResults) {
     stats.score += disconnectedBubbleResults.length * Stats.SCORE_PER_RESCUED_ANIMAL;
-    var canvas = floorsix.getCanvas();
+    var canvasSize = floorsix.getCanvasSize();
     var tmp = map[disconnectedBubbleResults[0].row][disconnectedBubbleResults[0].col];
-    collectorsCard = Card.create(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, Animal.Images[tmp.animal], tmp.animal, Animal.Names[tmp.animal]);
+    collectorsCard = Card.create(canvasSize.width / 2, canvasSize.height / 2, canvasSize.width * 0.8, Animal.Images[tmp.animal], tmp.animal, Animal.Names[tmp.animal]);
     phase = PHASE_COLLECTORS_CARD;
     disconnectedBubbleResults.forEach(function(db) {
       var bub = map[db.row][db.col];
@@ -518,74 +517,73 @@ floorsix.controller("/play", function() {
   }
 
   function render(canvas) {
-    var ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#222222";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    canvas.context.fillStyle = "#222222";
+    canvas.context.fillRect(0, 0, canvas.width, canvas.height);
 
-    Theme.render(ctx, canvas, theme);
+    Theme.render(canvas, theme);
 
-    renderStars(ctx);
-    renderScores(ctx);
-    renderBubbles(ctx);
+    renderStars(canvas);
+    renderScores(canvas);
+    renderBubbles(canvas);
     var bounds = {
       left: BUBBLE_RADIUS,
       right: canvas.width - BUBBLE_RADIUS,
       top: MIN_TRAJECTORY_Y,
       bottom: blaster.y - BUBBLE_DIAMETER
     }
-    Stats.renderBottomStats(ctx, canvas, stats);
-    Blaster.renderBlaster(ctx, blaster, bounds);
-    Stats.renderTopStats(ctx, canvas, stats);
+    Stats.renderBottomStats(canvas, stats);
+    Blaster.renderBlaster(canvas, blaster, bounds);
+    Stats.renderTopStats(canvas, stats);
 
     stats.rescuedAnimals.forEach(function(bubble) {
-      Bubble.render(ctx, bubble);
+      Bubble.render(canvas, bubble);
     });
 
     if (collectorsCard) {
-      Card.render(ctx, collectorsCard);
+      Card.render(canvas, collectorsCard);
     }
     if (phase == PHASE_WIN) {
-      Stats.renderWin(ctx, canvas, stats, level.animal);
+      Stats.renderWin(canvas, stats, level.animal);
     }
     else if (phase == PHASE_LOSE) {
-      Stats.renderLose(ctx, canvas, stats, level.animal);
+      Stats.renderLose(canvas, stats, level.animal);
     }
   }
 
-  function renderStars(ctx) {
+  function renderStars(canvas) {
     stars.forEach(function(star) {
       if (star.alive) {
-        Star.render(ctx, star);
+        Star.render(canvas, star);
       }
     });
   }
 
-  function renderScores(ctx) {
+  function renderScores(canvas) {
     scores.forEach(function(score) {
       if (score.alive) {
-        Score.render(ctx, score);
+        Score.render(canvas, score);
       }
     });
   }
 
-  function renderBubbles(ctx) {
+  function renderBubbles(canvas) {
     map.forEach(function(row, rowIndex) {
       row.forEach(function(bubble) {
         if (bubble) {
-          Bubble.render(ctx, bubble);
+          Bubble.render(canvas, bubble);
         }
       });
     });
 
     fallingBubbles.forEach(function(bubble) {
-      Bubble.render(ctx, bubble);
+      Bubble.render(canvas, bubble);
     });
 
     if (blaster.currentBubble) {
-      Bubble.render(ctx, blaster.currentBubble);
+      Bubble.render(canvas, blaster.currentBubble);
     }
     if (blaster.nextBubble) {
-      Bubble.render(ctx, blaster.nextBubble);
+      Bubble.render(canvas, blaster.nextBubble);
     }
   }
 

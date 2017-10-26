@@ -1,6 +1,6 @@
 floorsix.controller("/map", function() {
   var CLICK_TOLERANCE = 3;
-  var map = Map.create(floorsix.getCanvas());
+  var map = Map.create();
   var originalPoint = undefined;
   var prevPoint = undefined;
   var prevTouchTime = undefined;

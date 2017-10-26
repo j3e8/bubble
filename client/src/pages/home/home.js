@@ -4,7 +4,6 @@ floorsix.controller("/", function() {
   }
 
   function render(canvas) {
-    var ctx = canvas.getContext("2d");
   }
 
   return {

@@ -76,15 +76,15 @@ Star.animate = function(elapsedMs, star) {
   }
 }
 
-Star.render = function(ctx, star) {
+Star.render = function(canvas, star) {
   if (star.img && star.loaded) {
-    ctx.globalAlpha = star.opacity;
-    ctx.save();
-    ctx.translate(star.x, star.y);
-    ctx.rotate(star.rotation);
-    ctx.drawImage(star.img, -star.width/2, -star.height/2, star.width, star.height);
-    ctx.restore();
-    // ctx.drawImage(star.img, star.x, star.y, star.width, star.height);
-    ctx.globalAlpha = 1;
+    canvas.context.globalAlpha = star.opacity;
+    canvas.context.save();
+    canvas.context.translate(star.x, star.y);
+    canvas.context.rotate(star.rotation);
+    canvas.context.drawImage(star.img, -star.width/2, -star.height/2, star.width, star.height);
+    canvas.context.restore();
+    // canvas.context.drawImage(star.img, star.x, star.y, star.width, star.height);
+    canvas.context.globalAlpha = 1;
   }
 }

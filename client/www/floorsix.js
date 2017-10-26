@@ -24,6 +24,7 @@
   }
 
   var _isInitialized = false;
+  var ratio = 1;
 
   floorsix.app = function(cfg) {
     _isInitialized = true;
@@ -42,8 +43,11 @@
     }
   }
 
-  floorsix.getCanvas = function() {
-    return canvas;
+  floorsix.getCanvasSize = function() {
+    return canvas ? {
+      width: canvas.width / ratio,
+      height: canvas.height / ratio
+    } : null;
   }
 
   floorsix.math = {};
@@ -169,7 +173,7 @@
       touchstart = result.touchstart;
       touchmove = result.touchmove;
       touchend = result.touchend;
-      render(canvas);
+      render();
     }
     else {
       console.error("Controller not found for route", currentRoute);
@@ -177,21 +181,36 @@
   }
 
   function fillParent() {
+    var ctx = canvas.getContext('2d');
+    var devicePixelRatio = window.devicePixelRatio || 1;
+    var backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+                              ctx.mozBackingStorePixelRatio ||
+                              ctx.msBackingStorePixelRatio ||
+                              ctx.oBackingStorePixelRatio ||
+                              ctx.backingStorePixelRatio || 1;
+    ratio = devicePixelRatio / backingStoreRatio;
+
     var windowAspect = document.body.offsetWidth / document.body.offsetHeight;
+    var w, h;
     if (windowAspect >= config.aspect) {
-      canvas.height = document.body.offsetHeight;
-      canvas.width = canvas.height * config.aspect;
-      var extra = document.body.offsetWidth - canvas.width;
+      h = document.body.offsetHeight;
+      w = h * config.aspect;
+      var extra = document.body.offsetWidth - w;
       canvas.style.marginLeft = (extra / 2) + "px";
       canvas.style.marginTop = "0";
     }
     else {
-      canvas.width = document.body.offsetWidth;
-      canvas.height = canvas.width / config.aspect;
-      var extra = document.body.offsetHeight - canvas.height;
+      w = document.body.offsetWidth;
+      h = w / config.aspect;
+      var extra = document.body.offsetHeight - h;
       canvas.style.marginTop = (extra / 2) + "px";
       canvas.style.marginLeft = "0";
     }
+
+    canvas.width = w * ratio;
+    canvas.height = h * ratio;
+    canvas.style.width = Math.round(w) + 'px';
+    canvas.style.height = Math.round(h) + 'px';
   }
 
   function initClickEvents() {
@@ -282,17 +301,26 @@
 
   function render() {
     var ctx = canvas.getContext("2d");
+    var canvasSize = floorsix.getCanvasSize();
+    ctx.save();
+    ctx.scale(ratio, ratio);
+
     ctx.fillStyle = config.backgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
     if (renderer) {
-      renderer(canvas);
+      renderer({
+        width: canvasSize.width,
+        height: canvasSize.height,
+        context: canvas.getContext('2d')
+      });
     }
     if (navigator.phase == NAV_FADE_IN || navigator.phase == NAV_FADE_OUT) {
       ctx.fillStyle = "#000000";
       ctx.globalAlpha = navigator.shadowOpacity;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
       ctx.globalAlpha = 1;
     }
+    ctx.restore();
   }
 
 })();
