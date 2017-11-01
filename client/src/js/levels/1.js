@@ -15,6 +15,7 @@ Level.init = function() {
   var _ = null;
   var o = Bubble.ANIMAL
 
+  // WOODLAND
   Level.levels[1] = {
     number: 1,
     map: [
@@ -50,12 +51,42 @@ Level.init = function() {
       [_,G,R,_,B,o,B,_,G,_,_]
     ],
     bubbles: 10,
-    animal: Animal.SKUNK,
-    theme: Theme.WOODLAND
+    animal: Animal.CHIPMUNK,
+    theme: Theme.WOODLAND,
+    x: 0.377,
+    y: 0.718
   }
 
-  Level.levels[50] = {
-    number: 50,
+  Level.levels[3] = {
+    number: 3,
+    map: [
+      [_,_,G,B,B,_,B,B,G,_,_],
+       [_,G,_,B,G,G,B,_,G,_],
+      [_,G,R,_,B,o,B,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.SKUNK,
+    theme: Theme.WOODLAND,
+    x: 0.399, // 10996
+    y: 0.698 // 3858
+  }
+
+  Level.levels[4] = {
+    number: 4,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.FOX,
+    theme: Theme.WOODLAND,
+    x: 0.417,
+    y: 0.729
+  }
+
+  Level.levels[5] = {
+    number: 5,
     map: [
       [R,R,_,B,B,_,B,B,_,R,R],
        [G,R,_,B,G,G,B,_,R,G],
@@ -74,8 +105,42 @@ Level.init = function() {
       [G,_,R,R,B,B,B,R,R,_,G],
        [B,B,R,_,B,o,_,R,B,B],
     ],
-    bubbles: 25,
-    animal: Animal.PANDA,
-    theme: Theme.BAMBOO
+    bubbles: 30,
+    animal: Animal.RABBIT,
+    theme: Theme.WOODLAND
   }
+
+  // MOUNTAIN
+
+
+  // PRAIRIE
+  Level.levels[26] = {
+    number: 26,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.BUFFALO,
+    theme: Theme.PRAIRIE,
+    x: 0.308,
+    y: 0.667
+  }
+
+  Level.levels[27] = {
+    number: 27,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.BUFFALO,
+    theme: Theme.PRAIRIE,
+    x: 0.302,
+    y: 0.613
+  }
+
+
 }

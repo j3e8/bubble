@@ -11,6 +11,28 @@ Theme.WOODLAND = {
     { url: 'www/assets/themes/flurry4.svg', count: 8 }
   ]
 }
+Theme.MOUNTAIN = {
+  background: {
+    url: 'www/assets/themes/mountain/mountain.png'
+  },
+  flurries: [
+    { url: 'www/assets/themes/flurry1.svg', count: 8 },
+    { url: 'www/assets/themes/flurry2.svg', count: 8 },
+    { url: 'www/assets/themes/flurry3.svg', count: 8 },
+    { url: 'www/assets/themes/flurry4.svg', count: 8 }
+  ]
+}
+Theme.PRAIRIE = {
+  background: {
+    url: 'www/assets/themes/prairie/prairie.png'
+  },
+  flurries: [
+    { url: 'www/assets/themes/flurry1.svg', count: 8 },
+    { url: 'www/assets/themes/flurry2.svg', count: 8 },
+    { url: 'www/assets/themes/flurry3.svg', count: 8 },
+    { url: 'www/assets/themes/flurry4.svg', count: 8 }
+  ]
+}
 Theme.BAMBOO = {
   background: {
     url: 'www/assets/themes/bamboo/bamboo.png'
