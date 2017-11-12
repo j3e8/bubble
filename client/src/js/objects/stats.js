@@ -108,12 +108,12 @@ Stats.FADE_IN_RATE = 0.0015;
   }
 
   Stats.getNextAnimalCoords = function(stats) {
-    var canvas = floorsix.getCanvas();
-    var w = Stats.ANIMAL_WIDTH_PCT * canvas.width;
-    var xpad = Stats.X_PAD_PCT * canvas.width;
+    var canvasSize = floorsix.getCanvasSize();
+    var w = Stats.ANIMAL_WIDTH_PCT * canvasSize.width;
+    var xpad = Stats.X_PAD_PCT * canvasSize.width;
     return {
       x: xpad + (w / 2) + (stats.rescuedAnimals.length - 1) * w,
-      y: canvas.height - Stats.BOTTOM_Y_PCT * canvas.height
+      y: canvasSize.height - Stats.BOTTOM_Y_PCT * canvasSize.height
     }
   }
 

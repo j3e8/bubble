@@ -31,24 +31,6 @@
     config = Object.assign({}, config, cfg);
   }
 
-  floorsix.clone = function(item) {
-    if (item && Object.prototype.toString.call(item) == '[object Array]') {
-      var result = item.slice(0);
-      result.forEach(function(child, i) {
-        result[i] = floorsix.clone(child);
-      });
-      return result;
-    }
-    else if (item && typeof(item) == 'object') {
-      var result = {};
-      for (var prop in item) {
-        result[prop] = floorsix.clone(item[prop]);
-      }
-      return result;
-    }
-    return item;
-  }
-
   floorsix.controller = function(route, fn) {
     controllers[route] = fn;
   }

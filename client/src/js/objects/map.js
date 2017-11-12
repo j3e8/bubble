@@ -58,7 +58,11 @@ Map.FRICTION = 0.01;
 
   Map.render = function(canvas, map) {
     if (map && map.img && map.loaded) {
-      canvas.context.drawImage(map.img, map.x, map.y, map.width, map.height);
+      var sx = -map.x / map.width * map.img.width;
+      var sy = -map.y / map.height * map.img.height;
+      var swidth = canvas.width * (map.img.width / map.width);
+      var sheight = canvas.height * (map.img.height / map.height);
+      canvas.context.drawImage(map.img, sx, sy, swidth, sheight, 0, 0, canvas.width, canvas.height);
 
       if (levelIcon.loaded) {
         Level.levels.forEach(function(level) {

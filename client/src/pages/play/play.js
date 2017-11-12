@@ -33,7 +33,7 @@ floorsix.controller("/play", function() {
   function initializeLevel() {
     level = Level.get(levelNumber);
     theme = level.theme;
-    map = level.map;
+    map = floorsix.clone(level.map);
     var canvasSize = floorsix.getCanvasSize();
     BUBBLE_DIAMETER = canvasSize.width / BUBBLES_PER_ROW;
     BUBBLE_RADIUS = BUBBLE_DIAMETER / 2;

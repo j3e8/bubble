@@ -55,6 +55,16 @@ Animal.Images[Animal.PORCUPINE] = 'www/assets/themes/woodland/animals/porcupine.
 Animal.Bubbles[Animal.PORCUPINE] = 'www/assets/themes/woodland/animals/porcupine-bubble.svg';
 Animal.Names[Animal.PORCUPINE] = 'Porcupine';
 
+Animal.BADGER = 11;
+Animal.Images[Animal.BADGER] = 'www/assets/themes/woodland/animals/badger.svg';
+Animal.Bubbles[Animal.BADGER] = 'www/assets/themes/woodland/animals/badger-bubble.svg';
+Animal.Names[Animal.BADGER] = 'Badger';
+
+Animal.ROBIN = 12;
+Animal.Images[Animal.ROBIN] = 'www/assets/themes/woodland/animals/robin.svg';
+Animal.Bubbles[Animal.ROBIN] = 'www/assets/themes/woodland/animals/robin-bubble.svg';
+Animal.Names[Animal.ROBIN] = 'Robin';
+
 
 // MOUNTAIN
 
