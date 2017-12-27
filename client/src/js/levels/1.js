@@ -167,8 +167,8 @@ Level.init = function() {
     bubbles: 10,
     animal: Animal.DEER,
     theme: Theme.WOODLAND,
-    x: 3646 / Level.MAP_WIDTH_PX,
-    y: 3046 / Level.MAP_HEIGHT_PX
+    x: 3699 / Level.MAP_WIDTH_PX,
+    y: 2768 / Level.MAP_HEIGHT_PX
   }
 
   Level.levels[9] = {
@@ -181,8 +181,8 @@ Level.init = function() {
     bubbles: 10,
     animal: Animal.HEDGEHOG,
     theme: Theme.WOODLAND,
-    x: 3699 / Level.MAP_WIDTH_PX,
-    y: 2768 / Level.MAP_HEIGHT_PX
+    x: 3930 / Level.MAP_WIDTH_PX,
+    y: 2309 / Level.MAP_HEIGHT_PX
   }
 
   Level.levels[10] = {
@@ -195,8 +195,8 @@ Level.init = function() {
     bubbles: 10,
     animal: Animal.PORCUPINE,
     theme: Theme.WOODLAND,
-    x: 3930 / Level.MAP_WIDTH_PX,
-    y: 2309 / Level.MAP_HEIGHT_PX
+    x: 4355 / Level.MAP_WIDTH_PX,
+    y: 2230 / Level.MAP_HEIGHT_PX
   }
 
   Level.levels[11] = {
@@ -209,8 +209,8 @@ Level.init = function() {
     bubbles: 10,
     animal: Animal.BADGER,
     theme: Theme.WOODLAND,
-    x: 4355 / Level.MAP_WIDTH_PX,
-    y: 2230 / Level.MAP_HEIGHT_PX
+    x: 4804 / Level.MAP_WIDTH_PX,
+    y: 2347 / Level.MAP_HEIGHT_PX
   }
 
   Level.levels[12] = {
@@ -223,9 +223,24 @@ Level.init = function() {
     bubbles: 10,
     animal: Animal.ROBIN,
     theme: Theme.WOODLAND,
-    x: 4804 / Level.MAP_WIDTH_PX,
-    y: 2347 / Level.MAP_HEIGHT_PX
+    x: 4961 / Level.MAP_WIDTH_PX,
+    y: 2925 / Level.MAP_HEIGHT_PX
   }
+
+  Level.levels[13] = {
+    number: 13,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.OPOSSUM,
+    theme: Theme.WOODLAND,
+    x: 5196 / Level.MAP_WIDTH_PX,
+    y: 2916 / Level.MAP_HEIGHT_PX
+  }
+
 
   // MOUNTAIN
 

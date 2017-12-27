@@ -118,6 +118,9 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchStart(x, y) {
+    if (blaster.currentBubble.status == Bubble.FIRING) {
+      return;
+    }
     if (phase == PHASE_PLAYING) {
       var pt = { x:x, y:y };
       if (Bubble.pointHitTest(blaster.currentBubble, pt) || Bubble.pointHitTest(blaster.nextBubble, pt)) {
@@ -129,7 +132,6 @@ floorsix.controller("/play", function() {
     }
     else if (phase == PHASE_COLLECTORS_CARD) {
       collectorsCard = null;
-      phase = PHASE_PLAYING;
     }
     else if (phase == PHASE_LOSE || phase == PHASE_WIN) {
       floorsix.navigate('/map?level=' + level.number);
@@ -137,6 +139,9 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchMove(x, y) {
+    if (blaster.currentBubble.status == Bubble.FIRING) {
+      return;
+    }
     if (phase == PHASE_PLAYING) {
       calculateTrajectorySlope(x, y);
     }
@@ -152,6 +157,9 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchEnd(x, y) {
+    if (blaster.currentBubble.status == Bubble.FIRING) {
+      return;
+    }
     if (phase == PHASE_PLAYING) {
       if (blaster.trajectory && stats.bubblesLeft) {
         // FIRE, SHOOT, LAUNCH
@@ -164,6 +172,9 @@ floorsix.controller("/play", function() {
         Stats.fire(stats);
       }
       blaster.trajectory = null;
+    }
+    else if (phase == PHASE_COLLECTORS_CARD) {
+      phase = PHASE_PLAYING;
     }
   }
 
@@ -297,12 +308,10 @@ floorsix.controller("/play", function() {
       prepareNextBubble();
 
       if (isLevelComplete()) {
-        console.log('you win');
         phase = PHASE_WIN;
         Stats.youWin(stats);
       }
       else if (!stats.bubblesLeft && !blaster.currentBubble) {
-        console.log('you lose');
         phase = PHASE_LOSE;
         Stats.youLose(stats);
       }

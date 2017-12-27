@@ -10,8 +10,13 @@ Map.FRICTION = 0.01;
   var maxy = 0;
 
   var LEVEL_ICON_WIDTH_PCT = 0.05;
+  var LOCK_ICON_WIDTH_PCT = 0.06;
 
   var levelIcon = {
+    loaded: false,
+    img: new Image()
+  }
+  var lockIcon = {
     loaded: false,
     img: new Image()
   }
@@ -40,6 +45,13 @@ Map.FRICTION = 0.01;
       var aspect = levelIcon.img.width / levelIcon.img.height;
       levelIcon.width = LEVEL_ICON_WIDTH_PCT * canvasSize.width;
       levelIcon.height = levelIcon.width / aspect;
+    }
+    lockIcon.img.src = "www/assets/lock.svg";
+    lockIcon.img.onload = function() {
+      lockIcon.loaded = true;
+      var aspect = lockIcon.img.width / lockIcon.img.height;
+      lockIcon.width = LOCK_ICON_WIDTH_PCT * canvasSize.width;
+      lockIcon.height = lockIcon.width / aspect;
     }
     return map;
   }

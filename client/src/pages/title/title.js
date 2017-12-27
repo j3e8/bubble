@@ -1,13 +1,22 @@
 floorsix.controller("/", function() {
   console.log("title screen");
+
+  var imgLoaded = false;
+  var img = new Image();
+  img.src = "www/assets/title.png";
+  img.onload = function() {
+    imgLoaded = true;
+    var aspect = img.width / img.height;
+  }
+
   function animate(elapsedMs) {
 
   }
 
   function render(canvas) {
-    canvas.context.fillStyle = "#ffffff";
-    canvas.context.fontFamily = "30px Avenir-Light";
-    canvas.context.fillText('Zoo Rescue', 20, 20);
+    if (img && imgLoaded) {
+      canvas.context.drawImage(img, 0, 0, canvas.width, canvas.height);
+    }
   }
 
   function handleTouchStart(x, y) {

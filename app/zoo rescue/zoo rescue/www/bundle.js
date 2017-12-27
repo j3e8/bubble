@@ -11,6 +11,9 @@ var Level = {
   levels: []
 };
 
+Level.MAP_WIDTH_PX = 10996;
+Level.MAP_HEIGHT_PX = 3858;
+
 Level.get = function(level) {
   return Level.levels[level];
 }
@@ -45,7 +48,7 @@ Level.init = function() {
       [G,B,B,B,G,G,G,B,B,B,G],
        [B,B,R,R,R,R,R,R,B,B],
     ],
-    bubbles: 30,
+    bubbles: 45,
     animal: Animal.RACCOON,
     theme: Theme.WOODLAND,
     x: 0.3969,
@@ -55,9 +58,23 @@ Level.init = function() {
   Level.levels[2] = {
     number: 2,
     map: [
-      [R,R,G,B,_,_,B,G,R,_,_],
-       [G,R,_,B,G,B,_,G,R,_],
-      [_,G,R,_,B,o,B,_,G,_,_]
+      [R,R,G,B,G,G,G,B,G,R,R],
+       [G,R,G,B,G,G,B,G,R,G],
+      [G,G,G,B,B,o,B,B,G,G,G],
+       [B,B,R,R,G,G,R,R,B,B],
+      [B,R,R,G,G,B,G,G,R,R,B],
+       [B,B,B,G,G,G,G,B,B,B],
+      [R,R,G,R,R,B,R,R,G,R,R],
+       [R,G,G,G,B,B,G,G,G,R],
+      [R,R,G,o,G,G,G,G,G,R,R],
+       [B,B,R,R,G,G,R,R,B,B],
+      [B,R,G,B,R,B,R,B,G,R,B],
+       [R,B,R,B,B,B,B,R,B,R],
+      [R,R,R,G,G,B,G,G,R,R,R],
+       [B,B,G,G,R,R,G,o,B,B],
+      [B,G,G,R,R,G,R,R,G,G,B],
+       [B,B,B,G,G,G,G,B,B,B],
+      [B,G,G,G,R,R,R,G,G,G,B]
     ],
     bubbles: 10,
     animal: Animal.CHIPMUNK,
@@ -76,8 +93,8 @@ Level.init = function() {
     bubbles: 10,
     animal: Animal.SKUNK,
     theme: Theme.WOODLAND,
-    x: 0.399, // 10996
-    y: 0.698 // 3858
+    x: 0.399,
+    y: 0.698
   }
 
   Level.levels[4] = {
@@ -116,7 +133,107 @@ Level.init = function() {
     ],
     bubbles: 30,
     animal: Animal.RABBIT,
-    theme: Theme.WOODLAND
+    theme: Theme.WOODLAND,
+    x: 3969 / Level.MAP_WIDTH_PX,
+    y: 3250 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[6] = {
+    number: 6,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.OWL,
+    theme: Theme.WOODLAND,
+    x: 3766 / Level.MAP_WIDTH_PX,
+    y: 3510 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[7] = {
+    number: 7,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.BEAVER,
+    theme: Theme.WOODLAND,
+    x: 3646 / Level.MAP_WIDTH_PX,
+    y: 3046 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[8] = {
+    number: 8,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.DEER,
+    theme: Theme.WOODLAND,
+    x: 3646 / Level.MAP_WIDTH_PX,
+    y: 3046 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[9] = {
+    number: 9,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.HEDGEHOG,
+    theme: Theme.WOODLAND,
+    x: 3699 / Level.MAP_WIDTH_PX,
+    y: 2768 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[10] = {
+    number: 10,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.PORCUPINE,
+    theme: Theme.WOODLAND,
+    x: 3930 / Level.MAP_WIDTH_PX,
+    y: 2309 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[11] = {
+    number: 11,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.BADGER,
+    theme: Theme.WOODLAND,
+    x: 4355 / Level.MAP_WIDTH_PX,
+    y: 2230 / Level.MAP_HEIGHT_PX
+  }
+
+  Level.levels[12] = {
+    number: 12,
+    map: [
+      [_,G,_,_,B,B,_,_,G,_,_],
+       [G,G,_,B,o,B,_,G,G,_],
+      [_,G,_,_,B,B,_,_,G,_,_]
+    ],
+    bubbles: 10,
+    animal: Animal.ROBIN,
+    theme: Theme.WOODLAND,
+    x: 4804 / Level.MAP_WIDTH_PX,
+    y: 2347 / Level.MAP_HEIGHT_PX
   }
 
   // MOUNTAIN
@@ -1502,6 +1619,39 @@ floorsix.controller("/map", function() {
   }
 });
 
+floorsix.controller("/", function() {
+  console.log("title screen");
+  function animate(elapsedMs) {
+
+  }
+
+  function render(canvas) {
+    canvas.context.fillStyle = "#ffffff";
+    canvas.context.fontFamily = "30px Avenir-Light";
+    canvas.context.fillText('Zoo Rescue', 20, 20);
+  }
+
+  function handleTouchStart(x, y) {
+
+  }
+
+  function handleTouchMove(x, y) {
+
+  }
+
+  function handleTouchEnd(x, y) {
+    floorsix.navigate('/map?level=1');
+  }
+
+  return {
+    'animate': animate,
+    'render': render,
+    'touchstart': handleTouchStart,
+    'touchmove': handleTouchMove,
+    'touchend': handleTouchEnd
+  }
+});
+
 floorsix.controller("/play", function() {
   var BUBBLES_PER_ROW = 11;
   var BUBBLE_ROW_HEIGHT_PCT = 0.9;
@@ -1537,7 +1687,7 @@ floorsix.controller("/play", function() {
   function initializeLevel() {
     level = Level.get(levelNumber);
     theme = level.theme;
-    map = level.map;
+    map = floorsix.clone(level.map);
     var canvasSize = floorsix.getCanvasSize();
     BUBBLE_DIAMETER = canvasSize.width / BUBBLES_PER_ROW;
     BUBBLE_RADIUS = BUBBLE_DIAMETER / 2;
@@ -1622,6 +1772,9 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchStart(x, y) {
+    if (blaster.currentBubble.status == Bubble.FIRING) {
+      return;
+    }
     if (phase == PHASE_PLAYING) {
       var pt = { x:x, y:y };
       if (Bubble.pointHitTest(blaster.currentBubble, pt) || Bubble.pointHitTest(blaster.nextBubble, pt)) {
@@ -1633,7 +1786,6 @@ floorsix.controller("/play", function() {
     }
     else if (phase == PHASE_COLLECTORS_CARD) {
       collectorsCard = null;
-      phase = PHASE_PLAYING;
     }
     else if (phase == PHASE_LOSE || phase == PHASE_WIN) {
       floorsix.navigate('/map?level=' + level.number);
@@ -1641,6 +1793,9 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchMove(x, y) {
+    if (blaster.currentBubble.status == Bubble.FIRING) {
+      return;
+    }
     if (phase == PHASE_PLAYING) {
       calculateTrajectorySlope(x, y);
     }
@@ -1656,6 +1811,9 @@ floorsix.controller("/play", function() {
   }
 
   function handleTouchEnd(x, y) {
+    if (blaster.currentBubble.status == Bubble.FIRING) {
+      return;
+    }
     if (phase == PHASE_PLAYING) {
       if (blaster.trajectory && stats.bubblesLeft) {
         // FIRE, SHOOT, LAUNCH
@@ -1668,6 +1826,9 @@ floorsix.controller("/play", function() {
         Stats.fire(stats);
       }
       blaster.trajectory = null;
+    }
+    else if (phase == PHASE_COLLECTORS_CARD) {
+      phase = PHASE_PLAYING;
     }
   }
 
@@ -1801,12 +1962,10 @@ floorsix.controller("/play", function() {
       prepareNextBubble();
 
       if (isLevelComplete()) {
-        console.log('you win');
         phase = PHASE_WIN;
         Stats.youWin(stats);
       }
       else if (!stats.bubblesLeft && !blaster.currentBubble) {
-        console.log('you lose');
         phase = PHASE_LOSE;
         Stats.youLose(stats);
       }
@@ -2089,39 +2248,6 @@ floorsix.controller("/play", function() {
     if (blaster.nextBubble) {
       Bubble.render(canvas, blaster.nextBubble);
     }
-  }
-
-  return {
-    'animate': animate,
-    'render': render,
-    'touchstart': handleTouchStart,
-    'touchmove': handleTouchMove,
-    'touchend': handleTouchEnd
-  }
-});
-
-floorsix.controller("/", function() {
-  console.log("title screen");
-  function animate(elapsedMs) {
-
-  }
-
-  function render(canvas) {
-    canvas.context.fillStyle = "#ffffff";
-    canvas.context.fontFamily = "30px Avenir-Light";
-    canvas.context.fillText('Zoo Rescue', 20, 20);
-  }
-
-  function handleTouchStart(x, y) {
-
-  }
-
-  function handleTouchMove(x, y) {
-
-  }
-
-  function handleTouchEnd(x, y) {
-    floorsix.navigate('/map?level=1');
   }
 
   return {

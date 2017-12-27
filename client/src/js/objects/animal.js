@@ -65,6 +65,11 @@ Animal.Images[Animal.ROBIN] = 'www/assets/themes/woodland/animals/robin.svg';
 Animal.Bubbles[Animal.ROBIN] = 'www/assets/themes/woodland/animals/robin-bubble.svg';
 Animal.Names[Animal.ROBIN] = 'Robin';
 
+Animal.OPOSSUM = 13;
+Animal.Images[Animal.OPOSSUM] = 'www/assets/themes/woodland/animals/opossum.svg';
+Animal.Bubbles[Animal.OPOSSUM] = 'www/assets/themes/woodland/animals/opossum-bubble.svg';
+Animal.Names[Animal.OPOSSUM] = 'Opossum';
+
 
 // MOUNTAIN
 
